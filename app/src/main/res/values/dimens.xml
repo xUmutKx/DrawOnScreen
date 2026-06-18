@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="toolbar_icon_size">44dp</dimen>
+    <dimen name="toolbar_padding">6dp</dimen>
+    <dimen name="toolbar_corner">16dp</dimen>
+</resources>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbarRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_toolbar"
+    android:padding="6dp"
+    android:elevation="20dp">
+
+    <!-- Drag handle + collapse -->
+    <LinearLayout
+        android:id="@+id/dragHandle"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <View
+            android:layout_width="28dp"
+            android:layout_height="3dp"
+            android:background="#66FFFFFF"/>
+
+        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/btnCollapse"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_collapse"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/icon_tint"
+            android:contentDescription="Collapse"/>
+    </LinearLayout>
+
+    <!-- Collapsible section -->
+    <LinearLayout
+        android:id="@+id/toolsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- === PEN TYPES === -->
+        <ImageButton android:id="@+id/btnPen"
+            style="@style/ToolButton" android:src="@drawable/ic_pen"
+            android:contentDescription="Pen"/>
+        <ImageButton android:id="@+id/btnPencil"
+            style="@style/ToolButton" android:src="@drawable/ic_pencil"
+            android:contentDescription="Pencil"/>
+        <ImageButton android:id="@+id/btnFountain"
+            style="@style/ToolButton" android:src="@drawable/ic_fountain"
+            android:contentDescription="Fountain pen"/>
+        <ImageButton android:id="@+id/btnBrush"
+            style="@style/ToolButton" android:src="@drawable/ic_brush"
+            android:contentDescription="Brush"/>
+        <ImageButton android:id="@+id/btnCalligraphy"
+            style="@style/ToolButton" android:src="@drawable/ic_calligraphy"
+            android:contentDescription="Calligraphy"/>
+        <ImageButton android:id="@+id/btnMarker"
+            style="@style/ToolButton" android:src="@drawable/ic_marker"
+            android:contentDescription="Marker"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
+        <!-- === SHAPES === -->
+        <ImageButton android:id="@+id/btnEraser"
+            style="@style/ToolButton" android:src="@drawable/ic_eraser"/>
+        <ImageButton android:id="@+id/btnLine"
+            style="@style/ToolButton" android:src="@drawable/ic_line"/>
+        <ImageButton android:id="@+id/btnRect"
+            style="@style/ToolButton" android:src="@drawable/ic_rect"/>
+        <ImageButton android:id="@+id/btnCircle"
+            style="@style/ToolButton" android:src="@drawable/ic_circle"/>
+        <ImageButton android:id="@+id/btnArrow"
+            style="@style/ToolButton" android:src="@drawable/ic_arrow"/>
+        <ImageButton android:id="@+id/btnLaser"
+            style="@style/ToolButton" android:src="@drawable/ic_laser"
+            android:contentDescription="Laser pointer"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
+        <!-- === ACTIONS === -->
+        <ImageButton android:id="@+id/btnUndo"
+            style="@style/ToolButton" android:src="@drawable/ic_undo"/>
+        <ImageButton android:id="@+id/btnRedo"
+            style="@style/ToolButton" android:src="@drawable/ic_redo"/>
+        <ImageButton android:id="@+id/btnClear"
+            style="@style/ToolButton" android:src="@drawable/ic_delete"/>
+        <ImageButton android:id="@+id/btnPassThrough"
+            style="@style/ToolButton" android:src="@drawable/ic_pass_through"/>
+        <ImageButton android:id="@+id/btnScreenshot"
+            style="@style/ToolButton" android:src="@drawable/ic_screenshot"
+            android:contentDescription="Screenshot crop"/>
+        <ImageButton android:id="@+id/btnSpotlight"
+            style="@style/ToolButton" android:src="@drawable/ic_spotlight"
+            android:contentDescription="Spotlight"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
+        <!-- Stroke size slider (vertical) -->
+        <com.google.android.material.slider.Slider
+            android:id="@+id/strokeSlider"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:rotation="270"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:valueFrom="2"
+            android:valueTo="60"
+            android:value="8"
+            android:stepSize="1"
+            app:thumbColor="@color/primary"
+            app:trackColorActive="@color/primary"
+            app:trackColorInactive="@color/surface_variant"/>
+
+        <!-- Opacity slider (vertical) -->
+        <com.google.android.material.slider.Slider
+            android:id="@+id/opacitySlider"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:rotation="270"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:valueFrom="30"
+            android:valueTo="255"
+            android:value="255"
+            android:stepSize="1"
+            app:thumbColor="@color/primary"
+            app:trackColorActive="@color/primary"
+            app:trackColorInactive="@color/surface_variant"/>
+
+        <!-- Color palette -->
+        <LinearLayout
+            android:id="@+id/colorContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
+        <!-- Stylus button action setting -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stylus btn:"
+            android:textColor="#99FFFFFF"
+            android:textSize="9sp"
+            android:layout_gravity="center_horizontal"/>
+        <Spinner
+            android:id="@+id/spinnerStylusAction"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="9sp"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
+        <ImageButton android:id="@+id/btnClose"
+            style="@style/ToolButtonAccent" android:src="@drawable/ic_close"/>
+    </LinearLayout>
+</LinearLayout>

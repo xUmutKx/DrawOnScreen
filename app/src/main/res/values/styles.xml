@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ToolButton">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:tint">@color/icon_tint</item>
+        <item name="android:background">@drawable/bg_tool_button</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
+    <style name="ToolButtonAccent">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:tint">@color/icon_tint</item>
+        <item name="android:background">@drawable/bg_tool_button_accent</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+</resources>

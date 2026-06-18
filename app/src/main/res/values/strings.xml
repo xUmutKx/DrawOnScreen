@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Draw On Screen</string>
+    <string name="start_drawing">Start Drawing</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_message">Draw On Screen needs permission to display content over other apps. Tap Grant, then enable it in Settings, and return here.</string>
+    <string name="grant_permission">Open Settings</string>
+    <string name="channel_name">Draw On Screen</string>
+    <string name="channel_desc">Active drawing overlay</string>
+    <string name="notif_title">Drawing Active</string>
+    <string name="notif_text">Tap to open · Use toolbar to draw</string>
+    <string name="close">Stop</string>
+</resources>
