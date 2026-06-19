@@ -20,128 +20,99 @@ class DrawingService : Service() {
     private var floatingToolbar: FloatingToolbar? = null
 
     private val CHANNEL_ID = "draw_overlay_channel"
-    private val NOTIF_ID   = 1
+    private val NOTIF_ID = 1
 
-    private val canvasParams get() = WindowManager.LayoutParams(
+    private var currentCanvasParams: WindowManager.LayoutParams? = null
+
+    private fun makeCanvasParams(passThrough: Boolean = false) = WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+        if (passThrough)
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        else
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
         PixelFormat.TRANSLUCENT
     )
-    private var currentCanvasParams: WindowManager.LayoutParams? = null
 
     override fun onCreate() {
         super.onCreate()
-        CrashLogger.log(this, "Service", "onCreate başladı")
-
         try {
             createNotificationChannel()
             startForeground(NOTIF_ID, buildNotification())
-            CrashLogger.log(this, "Service", "startForeground OK")
         } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "startForeground HATA", e)
+            CrashLogger.log(this, "Service", "startForeground hatası", e)
             stopSelf(); return
         }
 
         isRunning = true
-
-        try {
-            wm = getSystemService(WINDOW_SERVICE) as WindowManager
-            CrashLogger.log(this, "Service", "WindowManager OK")
-        } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "WindowManager HATA", e)
-            stopSelf(); return
-        }
-
+        wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val prefs = AppPrefs(this)
 
-        // Titreşim
-        if (prefs.vibrateOnStart) {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    val vm = getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                    vm.defaultVibrator.vibrate(android.os.VibrationEffect.createOneShot(60, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
-                } else {
-                    @Suppress("DEPRECATION")
-                    (getSystemService(VIBRATOR_SERVICE) as? Vibrator)?.vibrate(60)
-                }
-            } catch (e: Exception) {
-                CrashLogger.log(this, "Service", "Titreşim hatası", e)
-            }
-        }
+        if (prefs.vibrateOnStart) vibrate()
 
-        // Canvas ekle
         try {
-            val params = canvasParams
+            val params = makeCanvasParams(prefs.autoPassthrough)
             currentCanvasParams = params
             drawingCanvas = DrawingCanvas(this, prefs)
             wm.addView(drawingCanvas, params)
-            CrashLogger.log(this, "Service", "DrawingCanvas eklendi")
         } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "DrawingCanvas HATA - FATAL", e)
-            CrashLogger.saveToDownloads(this, "CRASH - DrawingCanvas eklenemedi: ${e.message}")
+            CrashLogger.log(this, "Service", "Canvas eklenemedi", e)
             stopSelf(); return
         }
 
-        // Toolbar ekle
         if (!prefs.minimalUi) {
             try {
-                val canvas = drawingCanvas!!
                 floatingToolbar = FloatingToolbar(
-                    context             = this,
-                    wm                  = wm,
-                    canvas              = canvas,
-                    prefs               = prefs,
-                    onClose             = { stopSelf() },
+                    context = this, wm = wm, canvas = drawingCanvas!!,
+                    prefs = prefs,
+                    onClose = { stopSelf() },
                     onTogglePassThrough = { pt -> setPassThrough(pt) },
-                    onScreenshot        = { takeScreenshotOverlay() }
+                    onScreenshot = { floatingToolbar?.startScreenshotCrop(drawingCanvas?.getBitmap()) }
                 )
                 wm.addView(floatingToolbar!!.getView(), floatingToolbar!!.params)
-                CrashLogger.log(this, "Service", "FloatingToolbar eklendi")
             } catch (e: Exception) {
-                CrashLogger.log(this, "Service", "FloatingToolbar HATA", e)
-                CrashLogger.saveToDownloads(this, "CRASH - Toolbar eklenemedi: ${e.message}")
-                // Toolbar olmadan devam et - canvas çalışmaya devam eder
+                CrashLogger.log(this, "Service", "Toolbar eklenemedi", e)
             }
         }
-
-        CrashLogger.log(this, "Service", "onCreate tamamlandı")
     }
 
     private fun setPassThrough(enabled: Boolean) {
         val params = currentCanvasParams ?: return
-        params.flags = if (enabled) {
+        params.flags = if (enabled)
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-        } else {
+        else
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
-        }
-        try {
-            drawingCanvas?.let { wm.updateViewLayout(it, params) }
-        } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "setPassThrough hatası", e)
-        }
+        try { drawingCanvas?.let { wm.updateViewLayout(it, params) } } catch (_: Exception) {}
     }
 
-    private fun takeScreenshotOverlay() {
-        floatingToolbar?.startScreenshotCrop(drawingCanvas?.getBitmap())
+    private fun vibrate() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager)
+                    .defaultVibrator.vibrate(android.os.VibrationEffect.createOneShot(60, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                (getSystemService(VIBRATOR_SERVICE) as? Vibrator)?.vibrate(60)
+            }
+        } catch (_: Exception) {}
     }
 
     override fun onDestroy() {
-        CrashLogger.log(this, "Service", "onDestroy")
         isRunning = false
         try { drawingCanvas?.let { wm.removeView(it) } } catch (_: Exception) {}
         try { floatingToolbar?.getView()?.let { wm.removeView(it) } } catch (_: Exception) {}
-        drawingCanvas = null
-        floatingToolbar = null
+        drawingCanvas = null; floatingToolbar = null
         super.onDestroy()
     }
 
@@ -154,7 +125,6 @@ class DrawingService : Service() {
 
     private fun createNotificationChannel() {
         val ch = NotificationChannel(CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW).apply {
-            description = getString(R.string.channel_desc)
             enableLights(false); enableVibration(false)
         }
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(ch)
@@ -168,7 +138,7 @@ class DrawingService : Service() {
             Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notif_pencil)
+            .setSmallIcon(R.drawable.ic_app_pencil)
             .setContentTitle(getString(R.string.notif_title))
             .setContentText(getString(R.string.notif_text))
             .setContentIntent(openPi)

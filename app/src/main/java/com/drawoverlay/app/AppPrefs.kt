@@ -40,4 +40,19 @@ class AppPrefs(context: Context) {
     var defaultStroke    get() = p.getFloat("default_stroke", 8f)            ; set(v) = p.edit().putFloat("default_stroke", v).apply()
     var toolbarOpacity   get() = p.getInt("toolbar_opacity", 220)            ; set(v) = p.edit().putInt("toolbar_opacity", v).apply()
     var toolbarSide      get() = p.getBoolean("toolbar_side_right", false)   ; set(v) = p.edit().putBoolean("toolbar_side_right", v).apply()
+
+    // Toolbar - extra tool visibility
+    var showFountain      get() = p.getBoolean("show_fountain", true)        ; set(v) = p.edit().putBoolean("show_fountain", v).apply()
+    var showCalligraphy   get() = p.getBoolean("show_calligraphy", true)     ; set(v) = p.edit().putBoolean("show_calligraphy", v).apply()
+    var showMarker        get() = p.getBoolean("show_marker", true)          ; set(v) = p.edit().putBoolean("show_marker", v).apply()
+    var showPencil        get() = p.getBoolean("show_pencil", true)          ; set(v) = p.edit().putBoolean("show_pencil", v).apply()
+    var showBrush         get() = p.getBoolean("show_brush", true)           ; set(v) = p.edit().putBoolean("show_brush", v).apply()
+
+    // Developer
+    var debugOverlay      get() = p.getBoolean("debug_overlay", false)       ; set(v) = p.edit().putBoolean("debug_overlay", v).apply()
+    var verboseLogging    get() = p.getBoolean("verbose_logging", false)     ; set(v) = p.edit().putBoolean("verbose_logging", v).apply()
+    var disableCrashLog   get() = p.getBoolean("disable_crash_log", false)   ; set(v) = p.edit().putBoolean("disable_crash_log", v).apply()
+    var hwAcceleration    get() = p.getBoolean("hw_acceleration", true)      ; set(v) = p.edit().putBoolean("hw_acceleration", v).apply()
+
+    fun resetAll() = p.edit().clear().apply()
 }

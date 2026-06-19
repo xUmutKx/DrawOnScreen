@@ -4,126 +4,265 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="#000000">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="@string/settings"
-        app:titleTextColor="@color/on_surface"
-        android:background="@color/surface"
-        app:navigationIconTint="@color/on_surface"/>
+        app:title="Ayarlar"
+        app:titleTextColor="#FFFFFF"
+        android:background="#000000"
+        app:navigationIconTint="#FFFFFF"/>
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:paddingBottom="40dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <!-- INTERFACE -->
-            <TextView style="@style/SectionHeader" android:text="@string/section_interface"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
+
+            <!-- ARAYÜZ -->
+            <TextView style="@style/SectionHeader" android:text="Arayüz"/>
 
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_settings"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_minimal_ui"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchMinimalUi" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Minimal UI (toolbar gizle)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchMinimalUi"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_collapse"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_minimize_on_draw"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchMinimizeOnDraw" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Başlayınca küçült"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchMinimizeOnDraw"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_play"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_keep_screen_on"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchKeepScreenOn" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Ekranı açık tut"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchKeepScreenOn"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_check_circle"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_vibrate"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchVibrate" style="@style/PrefSwitch"/>
-            </LinearLayout>
-            <LinearLayout style="@style/PrefRow">
-                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_spotlight"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_dark_overlay"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchDarkTheme" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Başlayınca titret"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchVibrate"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
 
-            <!-- DRAWING -->
-            <TextView style="@style/SectionHeader" android:text="@string/section_drawing"/>
+            <!-- ÇİZİM -->
+            <TextView style="@style/SectionHeader" android:text="Çizim"/>
 
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_finger_draw"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchFingerDraw" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Parmakla çizim"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchFingerDraw"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pencil"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_stylus_only"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchStylusOnly" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Sadece kalem modu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchStylusOnly"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pass_through"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_auto_passthrough"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchAutoPassthrough" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Otomatik geçiş modu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchAutoPassthrough"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_brush"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_smoothing"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchSmoothing" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Çizgi yumuşatma"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchSmoothing"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_pressure"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchPressure" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Basınç hassasiyeti (kalem)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchPressure"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
 
             <!-- TOOLBAR -->
-            <TextView style="@style/SectionHeader" android:text="@string/section_toolbar"/>
+            <TextView style="@style/SectionHeader" android:text="Araç Çubuğu"/>
 
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_expand"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_toolbar_right"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchToolbarRight" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Araç çubuğu sağda"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchToolbarRight"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_undo"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_undo"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowUndo" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Geri al butonu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowUndo"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_redo"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_redo"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowRedo" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Yinele butonu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowRedo"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_eraser"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_eraser"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowEraser" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Silgi butonu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowEraser"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_rect"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_shapes"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowShapes" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Şekil butonları"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowShapes"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_laser"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_laser"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowLaser" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Lazer işaretçi"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowLaser"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_spotlight"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_spotlight"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowSpotlight" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Spotlight"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowSpotlight"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_screenshot"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_screenshot"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowScreenshot" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Ekran görüntüsü butonu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowScreenshot"
+                    style="@style/PrefSwitch"/>
             </LinearLayout>
+
             <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pass_through"/>
-                <TextView style="@style/PrefTitle" android:text="@string/pref_show_passthrough"/>
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowPassthrough" style="@style/PrefSwitch"/>
+                <TextView style="@style/PrefTitle" android:text="Geçiş modu butonu"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowPassthrough"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <!-- KALEMLER -->
+            <TextView style="@style/SectionHeader" android:text="Kalemler"/>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_fountain"/>
+                <TextView style="@style/PrefTitle" android:text="Dolma kalem"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowFountain"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_calligraphy"/>
+                <TextView style="@style/PrefTitle" android:text="Hat kalemi (kaligrafi)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowCalligraphy"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pencil"/>
+                <TextView style="@style/PrefTitle" android:text="Kurşun kalem"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowPencil"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_brush"/>
+                <TextView style="@style/PrefTitle" android:text="Fırça"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowBrush"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
+                <TextView style="@style/PrefTitle" android:text="Fosforlu kalem"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowMarker"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <!-- GELİŞTİRİCİ -->
+            <TextView style="@style/SectionHeader" android:text="Geliştirici"/>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_check_circle"/>
+                <TextView style="@style/PrefTitle" android:text="Donanım hızlandırma"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchHwAcceleration"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_settings"/>
+                <TextView style="@style/PrefTitle" android:text="Debug overlay (FPS/koordinat)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchDebugOverlay"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_expand"/>
+                <TextView style="@style/PrefTitle" android:text="Ayrıntılı log (verbose)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchVerboseLogging"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_close"/>
+                <TextView style="@style/PrefTitle" android:text="Çökme loglarını kapat"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchDisableCrashLog"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/rowResetAll">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_delete"/>
+                <TextView style="@style/PrefTitle" android:text="Tüm ayarları sıfırla" android:textColor="#FF6B6B"/>
             </LinearLayout>
 
         </LinearLayout>

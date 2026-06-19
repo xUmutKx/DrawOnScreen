@@ -1,51 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Drawly</string>
-    <string name="app_subtitle">Ekran üzerine çiz</string>
-    <string name="start_drawing">Çizimi Başlat</string>
-    <string name="stop_drawing">Çizimi Durdur</string>
-    <string name="settings">Ayarlar</string>
-    <string name="status_idle">● Bekliyor</string>
-    <string name="status_active">● Aktif</string>
-    <string name="permission_required">İzin Gerekli</string>
-    <string name="permission_message">Ekran üzerine çizebilmek için \"Diğer uygulamaların üzerinde göster\" iznini vermeniz gerekiyor.</string>
-    <string name="permission_denied">İzin verilmedi. Ayarlardan izni etkinleştirin.</string>
-    <string name="grant_permission">İzin Ver</string>
-    <string name="cancel">İptal</string>
-    <string name="perm_note">Overlay izni gereklidir</string>
-    <string name="channel_name">Çizim Servisi</string>
-    <string name="channel_desc">Ekran üzerine çizim servisi çalışıyor</string>
-    <string name="notif_title">Drawly Aktif</string>
-    <string name="notif_text">Ekran üzerine çizim devam ediyor</string>
-    <string name="close">Kapat</string>
-
-    <!-- Settings sections -->
-    <string name="section_interface">Arayüz</string>
-    <string name="section_drawing">Çizim</string>
-    <string name="section_toolbar">Araç Çubuğu</string>
-
-    <!-- Interface prefs -->
-    <string name="pref_minimal_ui">Minimal Arayüz</string>
-    <string name="pref_minimize_on_draw">Çizimde Küçült</string>
-    <string name="pref_keep_screen_on">Ekranı Açık Tut</string>
-    <string name="pref_vibrate">Başlarken Titreşim</string>
-    <string name="pref_dark_overlay">Karartma Katmanı</string>
-
-    <!-- Drawing prefs -->
-    <string name="pref_finger_draw">Parmakla Çizim</string>
-    <string name="pref_stylus_only">Sadece Stylus</string>
-    <string name="pref_auto_passthrough">Otomatik Geçirgen Mod</string>
-    <string name="pref_smoothing">Çizgi Düzleştirme</string>
-    <string name="pref_pressure">Basınç Hassasiyeti (Stylus)</string>
-
-    <!-- Toolbar prefs -->
-    <string name="pref_toolbar_right">Araç Çubuğunu Sağa Al</string>
-    <string name="pref_show_undo">Geri Al Butonu</string>
-    <string name="pref_show_redo">İleri Al Butonu</string>
-    <string name="pref_show_eraser">Silgi Butonu</string>
-    <string name="pref_show_shapes">Şekil Butonları</string>
-    <string name="pref_show_laser">Lazer Pointer</string>
-    <string name="pref_show_spotlight">Spotlight</string>
-    <string name="pref_show_screenshot">Ekran Görüntüsü</string>
-    <string name="pref_show_passthrough">Geçirgen Mod Butonu</string>
+    <string name="app_subtitle">Draw over any app</string>
+    <string name="start_drawing">Start Drawing</string>
+    <string name="stop_drawing">Stop Drawing</string>
+    <string name="settings">Settings</string>
+    <string name="status_idle">● Idle</string>
+    <string name="status_active">● Active</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_message">Drawly needs "Display over other apps" permission. Tap Grant, enable the toggle, then return here.</string>
+    <string name="permission_denied">Permission denied. Enable it in Settings.</string>
+    <string name="grant_permission">Open Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="channel_name">Drawing Service</string>
+    <string name="channel_desc">Screen drawing overlay is active</string>
+    <string name="notif_title">Drawly Active</string>
+    <string name="notif_text">Drawing overlay is running</string>
+    <string name="close">Stop</string>
+    <string name="section_interface">Interface</string>
+    <string name="section_drawing">Drawing</string>
+    <string name="section_toolbar">Toolbar</string>
+    <string name="pref_minimal_ui">Minimal UI (hide toolbar)</string>
+    <string name="pref_minimize_on_draw">Minimize on start</string>
+    <string name="pref_keep_screen_on">Keep screen on</string>
+    <string name="pref_vibrate">Vibrate on start</string>
+    <string name="pref_dark_overlay">Dark overlay layer</string>
+    <string name="pref_finger_draw">Finger drawing</string>
+    <string name="pref_stylus_only">Stylus only mode</string>
+    <string name="pref_auto_passthrough">Auto pass-through mode</string>
+    <string name="pref_smoothing">Stroke smoothing</string>
+    <string name="pref_pressure">Pressure sensitivity (stylus)</string>
+    <string name="pref_toolbar_right">Toolbar on right side</string>
+    <string name="pref_show_undo">Show undo button</string>
+    <string name="pref_show_redo">Show redo button</string>
+    <string name="pref_show_eraser">Show eraser button</string>
+    <string name="pref_show_shapes">Show shape buttons</string>
+    <string name="pref_show_laser">Show laser pointer</string>
+    <string name="pref_show_spotlight">Show spotlight</string>
+    <string name="pref_show_screenshot">Show screenshot button</string>
+    <string name="pref_show_passthrough">Show pass-through button</string>
 </resources>

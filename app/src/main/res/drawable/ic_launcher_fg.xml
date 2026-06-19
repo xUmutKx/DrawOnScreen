@@ -1,8 +1,15 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp" android:height="96dp" android:viewportWidth="24" android:viewportHeight="24">
-    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.6" android:strokeLineCap="round"
-        android:pathData="M4,20L17,7"/>
-    <path android:strokeColor="#FFFFFF" android:strokeWidth="1.6" android:strokeLineCap="round"
-        android:pathData="M15,5L19,9"/>
-    <path android:fillColor="#FFFFFF" android:pathData="M3.3,20.7l1.6,-3.9l2.3,2.3z"/>
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="960" android:viewportHeight="960">
+    <!-- ink_pen icon, scaled down to fit the 66% adaptive-icon safe zone, centered -->
+    <group
+        android:translateX="480"
+        android:translateY="480"
+        android:scaleX="0.38"
+        android:scaleY="0.38">
+        <group android:translateX="-432.5" android:translateY="-602.5">
+            <path android:fillColor="#E3E3E3"
+                android:pathData="m490,-527 37,37 217,-217 -37,-37 -217,217ZM200,-200h37l233,-233 -37,-37 -233,233v37Zm355,-205L405,-555l167,-167 -29,-29 -219,219 -56,-56 218,-219q24,-24 56.5,-24t56.5,24l29,29 50,-50q12,-12 28.5,-12t28.5,12l93,93q12,12 12,28.5T828,-678L555,-405ZM270,-120H120v-150l285,-285 150,150 -285,285Z" />
+        </group>
+    </group>
 </vector>

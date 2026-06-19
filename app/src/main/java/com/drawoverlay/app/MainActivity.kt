@@ -3,28 +3,29 @@ package com.drawoverlay.app
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.drawoverlay.app.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var prefs: AppPrefs
 
     private val overlayPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
+        // İzin verildiyse hemen başlat — kullanıcı geri döndüğünde onResume da çalışır
         if (Settings.canDrawOverlays(this)) {
-            CrashLogger.log(this, "Main", "Overlay izni verildi")
             startDrawingService()
         } else {
-            CrashLogger.log(this, "Main", "Overlay izni REDDEDİLDİ")
-            Snackbar.make(binding.root, getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "İzin verilmedi. Ayarlardan etkinleştirin.", Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -32,25 +33,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.statusBarColor = android.graphics.Color.BLACK
         window.navigationBarColor = android.graphics.Color.BLACK
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        prefs = AppPrefs(this)
 
-        CrashLogger.log(this, "Main", "MainActivity onCreate, overlay izni: ${Settings.canDrawOverlays(this)}")
+        if (prefs.keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.btnStart.setOnClickListener {
-            if (Settings.canDrawOverlays(this)) startDrawingService()
-            else requestOverlayPermission()
+            if (DrawingService.isRunning) {
+                stopService(Intent(this, DrawingService::class.java))
+                // Kısa gecikme ile state güncelle — service onDestroy async
+                Handler(Looper.getMainLooper()).postDelayed({ updateButtonState() }, 300)
+            } else if (Settings.canDrawOverlays(this)) {
+                startDrawingService()
+            } else {
+                requestOverlayPermission()
+            }
         }
 
         binding.btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
-        }
-
-        // Uzun basınca crash loglarını göster
-        binding.btnStart.setOnLongClickListener {
-            showCrashLogs()
-            true
         }
     }
 
@@ -61,82 +63,43 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateButtonState() {
         val running = DrawingService.isRunning
-        binding.btnStart.text = if (running) getString(R.string.stop_drawing) else getString(R.string.start_drawing)
-        binding.tvStatus.text = if (running) getString(R.string.status_active) else getString(R.string.status_idle)
+        binding.btnStart.text = if (running) "Stop Drawing" else "Start Drawing"
+        binding.tvStatus.text = if (running) "● Active" else "● Idle"
         binding.btnStart.setIconResource(if (running) R.drawable.ic_close else R.drawable.ic_play)
+        binding.btnStart.setTextColor(if (running) 0xFFFFFFFF.toInt() else 0xFF000000.toInt())
+        binding.btnStart.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            if (running) 0xFF333333.toInt() else 0xFFFFFFFF.toInt()
+        )
+        binding.btnStart.iconTint = android.content.res.ColorStateList.valueOf(
+            if (running) 0xFFFFFFFF.toInt() else 0xFF000000.toInt()
+        )
     }
 
     private fun startDrawingService() {
-        CrashLogger.log(this, "Main", "startDrawingService çağrıldı, isRunning=${DrawingService.isRunning}")
-        if (DrawingService.isRunning) {
-            stopService(Intent(this, DrawingService::class.java))
-            updateButtonState()
-            return
-        }
         try {
             startForegroundService(Intent(this, DrawingService::class.java))
-            updateButtonState()
-
-            // ÖNEMLİ: moveTaskToBack'i hemen çağırmak, servisin startForeground()
-            // çağrısını zamanında tamamlamasını engelleyebilir (Android 12+ kısıtlaması).
-            // Activity arka plana geçerken servis henüz foreground bildirimini
-            // göstermemişse sistem servisi anında öldürür (ForegroundServiceDidNotStartInTimeException).
-            // Bu yüzden küçük bir gecikme veriyoruz, servise nefes alma payı bırakıyoruz.
-            val prefs = AppPrefs(this)
+            // Kısa gecikme: service isRunning=true yapmadan önce buton state güncellenmesi
+            Handler(Looper.getMainLooper()).postDelayed({ updateButtonState() }, 200)
             if (prefs.minimizeOnDraw) {
-                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                    try { moveTaskToBack(true) } catch (e: Exception) {
-                        CrashLogger.log(this, "Main", "moveTaskToBack hatası", e)
-                    }
-                }, 600)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try { moveTaskToBack(true) } catch (_: Exception) {}
+                }, 500)
             }
         } catch (e: Exception) {
-            CrashLogger.log(this, "Main", "startForegroundService HATA", e)
-            Snackbar.make(binding.root, "Servis başlatılamadı: ${e.message}", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Başlatılamadı: ${e.message}", Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun requestOverlayPermission() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.permission_required))
-            .setMessage(getString(R.string.permission_message))
-            .setPositiveButton(getString(R.string.grant_permission)) { _, _ ->
+            .setTitle("İzin Gerekli")
+            .setMessage("Drawly'nin \"Diğer uygulamaların üzerinde göster\" iznine ihtiyacı var.\n\nAç → Drawly'yi bul → Açık konuma getir → Geri dön.")
+            .setPositiveButton("Ayarları Aç") { _, _ ->
                 overlayPermissionLauncher.launch(
                     Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
                 )
             }
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton("İptal", null)
             .show()
-    }
-
-    private fun showCrashLogs() {
-        try {
-            val dirs = listOf(
-                getExternalFilesDir(null),
-                filesDir,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            )
-            val logs = dirs.filterNotNull()
-                .flatMap { File(it, "DrawOnScreen_Logs").listFiles()?.toList() ?: emptyList() }
-                .sortedByDescending { it.lastModified() }
-
-            if (logs.isEmpty()) {
-                Snackbar.make(binding.root, "Crash logu bulunamadı", Snackbar.LENGTH_SHORT).show()
-                return
-            }
-
-            val lastLog = logs.first().readText().takeLast(2000)
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Son Crash Logu (${logs.size} dosya)")
-                .setMessage(lastLog)
-                .setPositiveButton("Tamam", null)
-                .setNeutralButton("Log Klasörü") { _, _ ->
-                    val path = logs.first().parentFile?.absolutePath ?: ""
-                    Snackbar.make(binding.root, path, Snackbar.LENGTH_LONG).show()
-                }
-                .show()
-        } catch (e: Exception) {
-            Snackbar.make(binding.root, "Log okunamadı: ${e.message}", Snackbar.LENGTH_SHORT).show()
-        }
     }
 }
