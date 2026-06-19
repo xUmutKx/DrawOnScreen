@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#FFFFFF</color>
+    <color name="primary_dark">#CCCCCC</color>
+    <color name="on_primary">#000000</color>
+    <color name="background">#000000</color>
+    <color name="surface">#0D0D0D</color>
+    <color name="surface_variant">#1A1A1A</color>
+    <color name="on_surface">#FFFFFF</color>
+    <color name="on_surface_dim">#AAAAAA</color>
+    <color name="icon_tint">#FFFFFF</color>
+    <color name="divider">#222222</color>
+    <color name="accent">#FFFFFF</color>
+</resources>

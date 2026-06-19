@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Drawly</string>
+    <string name="app_subtitle">Ekran üzerine çiz</string>
+    <string name="start_drawing">Çizimi Başlat</string>
+    <string name="stop_drawing">Çizimi Durdur</string>
+    <string name="settings">Ayarlar</string>
+    <string name="status_idle">● Bekliyor</string>
+    <string name="status_active">● Aktif</string>
+    <string name="permission_required">İzin Gerekli</string>
+    <string name="permission_message">Ekran üzerine çizebilmek için \"Diğer uygulamaların üzerinde göster\" iznini vermeniz gerekiyor.</string>
+    <string name="permission_denied">İzin verilmedi. Ayarlardan izni etkinleştirin.</string>
+    <string name="grant_permission">İzin Ver</string>
+    <string name="cancel">İptal</string>
+    <string name="perm_note">Overlay izni gereklidir</string>
+    <string name="channel_name">Çizim Servisi</string>
+    <string name="channel_desc">Ekran üzerine çizim servisi çalışıyor</string>
+    <string name="notif_title">Drawly Aktif</string>
+    <string name="notif_text">Ekran üzerine çizim devam ediyor</string>
+    <string name="close">Kapat</string>
+
+    <!-- Settings sections -->
+    <string name="section_interface">Arayüz</string>
+    <string name="section_drawing">Çizim</string>
+    <string name="section_toolbar">Araç Çubuğu</string>
+
+    <!-- Interface prefs -->
+    <string name="pref_minimal_ui">Minimal Arayüz</string>
+    <string name="pref_minimize_on_draw">Çizimde Küçült</string>
+    <string name="pref_keep_screen_on">Ekranı Açık Tut</string>
+    <string name="pref_vibrate">Başlarken Titreşim</string>
+    <string name="pref_dark_overlay">Karartma Katmanı</string>
+
+    <!-- Drawing prefs -->
+    <string name="pref_finger_draw">Parmakla Çizim</string>
+    <string name="pref_stylus_only">Sadece Stylus</string>
+    <string name="pref_auto_passthrough">Otomatik Geçirgen Mod</string>
+    <string name="pref_smoothing">Çizgi Düzleştirme</string>
+    <string name="pref_pressure">Basınç Hassasiyeti (Stylus)</string>
+
+    <!-- Toolbar prefs -->
+    <string name="pref_toolbar_right">Araç Çubuğunu Sağa Al</string>
+    <string name="pref_show_undo">Geri Al Butonu</string>
+    <string name="pref_show_redo">İleri Al Butonu</string>
+    <string name="pref_show_eraser">Silgi Butonu</string>
+    <string name="pref_show_shapes">Şekil Butonları</string>
+    <string name="pref_show_laser">Lazer Pointer</string>
+    <string name="pref_show_spotlight">Spotlight</string>
+    <string name="pref_show_screenshot">Ekran Görüntüsü</string>
+    <string name="pref_show_passthrough">Geçirgen Mod Butonu</string>
+</resources>

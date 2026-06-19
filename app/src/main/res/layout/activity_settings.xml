@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/settings"
+        app:titleTextColor="@color/on_surface"
+        android:background="@color/surface"
+        app:navigationIconTint="@color/on_surface"/>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingBottom="40dp">
+
+            <!-- INTERFACE -->
+            <TextView style="@style/SectionHeader" android:text="@string/section_interface"/>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_settings"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_minimal_ui"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchMinimalUi" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_collapse"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_minimize_on_draw"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchMinimizeOnDraw" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_play"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_keep_screen_on"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchKeepScreenOn" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_check_circle"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_vibrate"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchVibrate" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_spotlight"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_dark_overlay"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchDarkTheme" style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <!-- DRAWING -->
+            <TextView style="@style/SectionHeader" android:text="@string/section_drawing"/>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_finger_draw"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchFingerDraw" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pencil"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_stylus_only"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchStylusOnly" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pass_through"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_auto_passthrough"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchAutoPassthrough" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_brush"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_smoothing"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchSmoothing" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_pressure"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchPressure" style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <!-- TOOLBAR -->
+            <TextView style="@style/SectionHeader" android:text="@string/section_toolbar"/>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_expand"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_toolbar_right"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchToolbarRight" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_undo"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_undo"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowUndo" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_redo"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_redo"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowRedo" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_eraser"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_eraser"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowEraser" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_rect"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_shapes"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowShapes" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_laser"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_laser"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowLaser" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_spotlight"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_spotlight"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowSpotlight" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_screenshot"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_screenshot"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowScreenshot" style="@style/PrefSwitch"/>
+            </LinearLayout>
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pass_through"/>
+                <TextView style="@style/PrefTitle" android:text="@string/pref_show_passthrough"/>
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/switchShowPassthrough" style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

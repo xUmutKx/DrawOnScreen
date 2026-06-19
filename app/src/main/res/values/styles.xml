@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Toolbar butonları - EKSİK OLAN BUNLARDI, CRASH SEBEBİ -->
+    <style name="ToolButton">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@drawable/bg_tool_button</item>
+        <item name="android:tint">@color/icon_tint</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginVertical">2dp</item>
+    </style>
+
+    <style name="ToolButtonAccent">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@drawable/bg_tool_button_accent</item>
+        <item name="android:tint">@color/icon_tint</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginVertical">2dp</item>
+    </style>
+
+    <!-- Settings ekranı -->
+    <style name="SectionHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="PrefRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="PrefIcon">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:tint">@color/icon_tint</item>
+    </style>
+
+    <style name="PrefTitle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PrefSwitch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="useMaterialThemeColors">true</item>
+    </style>
+
+</resources>
