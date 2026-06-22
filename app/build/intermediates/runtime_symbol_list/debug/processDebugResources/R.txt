@@ -3034,6 +3034,7 @@ int drawable ic_clear_black_24 0x7f070096
 int drawable ic_clock_black_24dp 0x7f070097
 int drawable ic_close 0x7f070098
 int drawable ic_collapse 0x7f070099
+int drawable ic_custom_launcher 0x7f07010a
 int drawable ic_delete 0x7f07009a
 int drawable ic_draw_logo 0x7f07009b
 int drawable ic_eraser 0x7f07009c
@@ -3688,7 +3689,6 @@ int id transition_scene_layoutid_cache 0x7f08021c
 int id transition_transform 0x7f08021d
 int id triangle 0x7f08021e
 int id tvDesc 0x7f08021f
-int id tvStatus 0x7f080220
 int id tvTitle 0x7f080221
 int id unchecked 0x7f080222
 int id uniform 0x7f080223

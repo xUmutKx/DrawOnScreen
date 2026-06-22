@@ -3035,6 +3035,7 @@ drawable ic_clear_black_24
 drawable ic_clock_black_24dp
 drawable ic_close
 drawable ic_collapse
+drawable ic_custom_launcher
 drawable ic_delete
 drawable ic_draw_logo
 drawable ic_eraser
@@ -3689,7 +3690,6 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id tvDesc
-id tvStatus
 id tvTitle
 id unchecked
 id uniform

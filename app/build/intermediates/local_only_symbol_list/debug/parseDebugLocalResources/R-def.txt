@@ -28,6 +28,7 @@ drawable ic_check_circle
 drawable ic_circle
 drawable ic_close
 drawable ic_collapse
+drawable ic_custom_launcher
 drawable ic_delete
 drawable ic_draw_logo
 drawable ic_eraser
@@ -120,7 +121,6 @@ id toolbarRoot
 id toolsContainer
 id toolsGrid
 id tvDesc
-id tvStatus
 id tvTitle
 layout activity_main
 layout activity_settings
