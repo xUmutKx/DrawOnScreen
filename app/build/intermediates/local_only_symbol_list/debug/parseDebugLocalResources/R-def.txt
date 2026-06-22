@@ -121,6 +121,7 @@ id toolbarRoot
 id toolsContainer
 id toolsGrid
 id tvDesc
+id tvStatus
 id tvTitle
 layout activity_main
 layout activity_settings

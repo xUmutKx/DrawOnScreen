@@ -37,7 +37,9 @@ class FloatingToolbar(
     val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or 
+        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or 
+        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
         PixelFormat.TRANSLUCENT
     ).apply {
         gravity = if (prefs.toolbarSide) Gravity.TOP or Gravity.END else Gravity.TOP or Gravity.START
@@ -102,6 +104,9 @@ class FloatingToolbar(
             DrawingTool.PEN -> R.id.btnPen
             DrawingTool.PENCIL -> R.id.btnPencil
             DrawingTool.FOUNTAIN -> R.id.btnFountain
+            DrawingTool.BRUSH -> R.id.btnBrush
+            DrawingTool.CALLIGRAPHY -> R.id.btnCalligraphy
+            DrawingTool.MARKER -> R.id.btnMarker
             DrawingTool.ERASER -> R.id.btnEraser
             DrawingTool.LINE -> R.id.btnLine
             DrawingTool.RECTANGLE -> R.id.btnRect
@@ -239,6 +244,10 @@ class FloatingToolbar(
             hideToolMenu()
         }
 
+        // IMPROVED MENU POSITIONING
+        val toolbarPos = IntArray(2)
+        root.getLocationOnScreen(toolbarPos)
+        
         val menuParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -249,25 +258,23 @@ class FloatingToolbar(
         ).apply {
             gravity = Gravity.TOP or Gravity.START
             
-            val toolbarBounds = IntArray(2)
-            root.getLocationOnScreen(toolbarBounds)
-            
+            val menuWidth = (220 * context.resources.displayMetrics.density).toInt()
             if (prefs.toolbarSide) {
-                x = toolbarBounds[0] - (230 * context.resources.displayMetrics.density).toInt()
+                // Toolbar on right, put menu on the left
+                x = toolbarPos[0] - menuWidth - (8 * context.resources.displayMetrics.density).toInt()
             } else {
-                x = toolbarBounds[0] + root.width
+                // Toolbar on left, put menu on the right
+                x = toolbarPos[0] + root.width + (8 * context.resources.displayMetrics.density).toInt()
             }
-            y = toolbarBounds[1]
+            y = toolbarPos[1]
             
-            // ENSURE IT'S ON SCREEN
-            if (x < 0) x = 0
+            if (x < 0) x = 8
         }
         
         try {
             wm.addView(menu, menuParams)
             toolsMenu = menu
             
-            // CLICK OUTSIDE TO CLOSE
             menu.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_OUTSIDE) {
                     hideToolMenu()
@@ -275,7 +282,7 @@ class FloatingToolbar(
                 } else false
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "Menu error: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Dropdown Error", Toast.LENGTH_SHORT).show()
         }
     }
 

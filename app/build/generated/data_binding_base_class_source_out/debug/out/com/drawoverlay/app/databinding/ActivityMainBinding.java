@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -29,13 +30,17 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final LinearLayout logoBlock;
 
+  @NonNull
+  public final TextView tvStatus;
+
   private ActivityMainBinding(@NonNull ConstraintLayout rootView,
       @NonNull MaterialButton btnSettings, @NonNull MaterialButton btnStart,
-      @NonNull LinearLayout logoBlock) {
+      @NonNull LinearLayout logoBlock, @NonNull TextView tvStatus) {
     this.rootView = rootView;
     this.btnSettings = btnSettings;
     this.btnStart = btnStart;
     this.logoBlock = logoBlock;
+    this.tvStatus = tvStatus;
   }
 
   @Override
@@ -83,7 +88,14 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((ConstraintLayout) rootView, btnSettings, btnStart, logoBlock);
+      id = R.id.tvStatus;
+      TextView tvStatus = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatus == null) {
+        break missingId;
+      }
+
+      return new ActivityMainBinding((ConstraintLayout) rootView, btnSettings, btnStart, logoBlock,
+          tvStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

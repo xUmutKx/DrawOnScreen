@@ -100,12 +100,12 @@
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\mipmap-mdpi\\ic_launcher_round.png"
     },
     {
-        "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_play.xml.flat",
-        "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_play.xml"
+        "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_custom_launcher.xml.flat",
+        "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_custom_launcher.xml"
     },
     {
-        "merged": "com.drawoverlay.app-debug-33:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.drawoverlay.app-main-35:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_play.xml.flat",
+        "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_play.xml"
     },
     {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_launcher_fg_red.xml.flat",
@@ -188,10 +188,6 @@
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_check_circle.xml"
     },
     {
-        "merged": "com.drawoverlay.app-debug-33:/drawable_ic_custom_launcher.xml.flat",
-        "source": "com.drawoverlay.app-main-35:/drawable/ic_custom_launcher.xml"
-    },
-    {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_launcher_fg_green.xml.flat",
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_launcher_fg_green.xml"
     },
@@ -218,10 +214,6 @@
     {
         "merged": "com.drawoverlay.app-debug-33:/layout_activity_main.xml.flat",
         "source": "com.drawoverlay.app-main-35:/layout/activity_main.xml"
-    },
-    {
-        "merged": "com.drawoverlay.app-debug-33:/drawable_ic_launcher_bg.xml.flat",
-        "source": "com.drawoverlay.app-main-35:/drawable/ic_launcher_bg.xml"
     },
     {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_delete.xml.flat",
