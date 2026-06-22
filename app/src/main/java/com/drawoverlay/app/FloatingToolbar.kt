@@ -6,7 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.*
 import android.widget.*
 import com.google.android.material.slider.Slider
-import androidx.appcompat.view.ContextThemeWrapper
+import com.google.android.material.card.MaterialCardView
 
 class FloatingToolbar(
     private val context: Context,
@@ -22,6 +22,8 @@ class FloatingToolbar(
     private var isExpanded = true
     private var isSpotlight = false
     private var spotlightView: View? = null
+    
+    private var toolsMenu: View? = null
 
     private val spotlightParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT,
@@ -46,12 +48,10 @@ class FloatingToolbar(
     private var winStartX = 0; private var winStartY = 0
 
     private val colorPalette = listOf(
-        Color.WHITE, Color.BLACK,
-        0xFFFF5252.toInt(), 0xFF69F0AE.toInt(), 0xFF448AFF.toInt(),
-        0xFFFFFF00.toInt(), 0xFFFF9100.toInt(), 0xFFEA80FC.toInt(),
-        0xFF18FFFF.toInt(), 0xFF9E9E9E.toInt(),
-        0xFFFF6D00.toInt(), 0xFF00BFA5.toInt(),
-        0xFFD500F9.toInt(), 0xFFFFD740.toInt()
+        Color.WHITE, Color.BLACK, Color.RED, 0xFF4CAF50.toInt(), 0xFF2196F3.toInt(),
+        0xFFFFEB3B.toInt(), 0xFF00BCD4.toInt(), 0xFFE91E63.toInt(), 
+        0xFFFF9800.toInt(), 0xFF9C27B0.toInt(),
+        0xFF795548.toInt(), 0xFF9E9E9E.toInt()
     )
 
     init {
@@ -80,13 +80,15 @@ class FloatingToolbar(
         vis(R.id.btnSpotlight, prefs.showSpotlight)
         vis(R.id.btnScreenshot, prefs.showScreenshot)
         vis(R.id.btnPassThrough, prefs.showPassthrough)
-        vis(R.id.btnRuler, prefs.showRuler)
+        vis(R.id.btnRuler, true)
 
         vis(R.id.btnFountain, prefs.showFountain)
         vis(R.id.btnCalligraphy, prefs.showCalligraphy)
         vis(R.id.btnPencil, prefs.showPencil)
-        vis(R.id.btnBrush, prefs.showBrush)
-        vis(R.id.btnMarker, prefs.showMarker)
+        
+        // Compact mode: hide some redundant buttons
+        root.findViewById<View>(R.id.btnBrush)?.visibility = View.GONE
+        root.findViewById<View>(R.id.btnMarker)?.visibility = View.GONE
 
         val defaultTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
         canvas.currentTool = defaultTool
@@ -101,9 +103,6 @@ class FloatingToolbar(
             DrawingTool.PEN -> R.id.btnPen
             DrawingTool.PENCIL -> R.id.btnPencil
             DrawingTool.FOUNTAIN -> R.id.btnFountain
-            DrawingTool.BRUSH -> R.id.btnBrush
-            DrawingTool.CALLIGRAPHY -> R.id.btnCalligraphy
-            DrawingTool.MARKER -> R.id.btnMarker
             DrawingTool.ERASER -> R.id.btnEraser
             DrawingTool.LINE -> R.id.btnLine
             DrawingTool.RECTANGLE -> R.id.btnRect
@@ -125,6 +124,7 @@ class FloatingToolbar(
                     params.x = (winStartX + (ev.rawX - dragStartX)).toInt()
                     params.y = (winStartY + (ev.rawY - dragStartY)).toInt()
                     try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
+                    hideToolMenu()
                 }
                 MotionEvent.ACTION_UP -> { v.performClick() }
             }
@@ -139,15 +139,13 @@ class FloatingToolbar(
                 if (isExpanded) View.VISIBLE else View.GONE
             root.findViewById<ImageButton>(R.id.btnCollapse)
                 ?.setImageResource(if (isExpanded) R.drawable.ic_collapse else R.drawable.ic_expand)
+            hideToolMenu()
         }
 
         val toolMap = mapOf(
             R.id.btnPen to DrawingTool.PEN,
             R.id.btnPencil to DrawingTool.PENCIL,
             R.id.btnFountain to DrawingTool.FOUNTAIN,
-            R.id.btnBrush to DrawingTool.BRUSH,
-            R.id.btnCalligraphy to DrawingTool.CALLIGRAPHY,
-            R.id.btnMarker to DrawingTool.MARKER,
             R.id.btnEraser to DrawingTool.ERASER,
             R.id.btnLine to DrawingTool.LINE,
             R.id.btnRect to DrawingTool.RECTANGLE,
@@ -157,9 +155,7 @@ class FloatingToolbar(
         )
 
         toolMap.forEach { (id, tool) ->
-            root.findViewById<ImageButton>(id)?.setOnClickListener {
-                selectTool(tool, id)
-            }
+            root.findViewById<ImageButton>(id)?.setOnClickListener { selectTool(tool, id) }
         }
 
         root.findViewById<ImageButton>(R.id.btnUndo)?.setOnClickListener { canvas.undo() }
@@ -191,38 +187,17 @@ class FloatingToolbar(
         setupColorPalette()
         updateRulerButton()
 
-        root.findViewById<ImageButton>(R.id.btnToolSelect)?.setOnClickListener { btn ->
-            val themedContext = ContextThemeWrapper(context, R.style.Theme_DrawOnScreen)
-            val popup = PopupMenu(themedContext, btn)
-            val tools = DrawingTool.entries
-            tools.forEachIndexed { index, tool ->
-                popup.menu.add(0, index, 0, tool.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() })
+        root.findViewById<ImageButton>(R.id.btnToolSelect)?.setOnClickListener { showToolMenu() }
+        
+        root.findViewById<ImageButton>(R.id.btnStylusAction)?.setOnClickListener { 
+            val next = when(canvas.stylusButtonAction) {
+                StylusButtonAction.ERASER -> StylusButtonAction.LASER
+                StylusButtonAction.LASER -> StylusButtonAction.MARKER
+                else -> StylusButtonAction.ERASER
             }
-            popup.setOnMenuItemClickListener { item ->
-                val tool = tools[item.itemId]
-                val btnId = getToolButtonId(tool)
-                selectTool(tool, if (btnId != 0) btnId else R.id.btnToolSelect)
-                true
-            }
-            popup.show()
-        }
-
-        root.findViewById<ImageButton>(R.id.btnStylusAction)?.setOnClickListener { btn ->
-            val themedContext = ContextThemeWrapper(context, R.style.Theme_DrawOnScreen)
-            val popup = PopupMenu(themedContext, btn)
-            val actions = listOf("Eraser", "Laser", "Marker")
-            actions.forEachIndexed { index, action -> popup.menu.add(0, index, 0, action) }
-            popup.setOnMenuItemClickListener { item ->
-                val action = when (item.itemId) {
-                    1 -> StylusButtonAction.LASER
-                    2 -> StylusButtonAction.MARKER
-                    else -> StylusButtonAction.ERASER
-                }
-                canvas.stylusButtonAction = action
-                prefs.stylusButtonAction = action.name
-                true
-            }
-            popup.show()
+            canvas.stylusButtonAction = next
+            prefs.stylusButtonAction = next.name
+            Toast.makeText(context, "Stylus: ${next.name}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -234,15 +209,87 @@ class FloatingToolbar(
             root.findViewById<ImageButton>(R.id.btnPassThrough)?.clearColorFilter()
         }
         updateToolHighlight(btnId)
+        hideToolMenu()
+    }
+
+    private fun showToolMenu() {
+        if (toolsMenu != null) { hideToolMenu(); return }
+        
+        val menu = LayoutInflater.from(context).inflate(R.layout.layout_tools_menu, null)
+        val grid = menu.findViewById<GridLayout>(R.id.toolsGrid)
+        
+        DrawingTool.entries.forEach { tool ->
+            val btn = ImageButton(context).apply {
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = (52 * context.resources.displayMetrics.density).toInt()
+                    height = width
+                }
+                setBackgroundResource(R.drawable.bg_tool_button)
+                setImageResource(getIconForTool(tool))
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+                setPadding(14, 14, 14, 14)
+                alpha = if (canvas.currentTool == tool) 1f else 0.5f
+                setOnClickListener { selectTool(tool, 0) }
+            }
+            grid.addView(btn)
+        }
+        
+        menu.findViewById<View>(R.id.btnClearMenu)?.setOnClickListener { 
+            canvas.clearAll()
+            hideToolMenu()
+        }
+
+        val menuParams = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = params.gravity
+            val offset = (230 * context.resources.displayMetrics.density).toInt()
+            x = if (prefs.toolbarSide) params.x + offset else params.x + root.width
+            y = params.y
+        }
+        
+        try {
+            wm.addView(menu, menuParams)
+            toolsMenu = menu
+            menu.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_OUTSIDE) { hideToolMenu(); true } else false
+            }
+        } catch (_: Exception) {}
+    }
+
+    private fun hideToolMenu() {
+        toolsMenu?.let { try { wm.removeView(it) } catch (_: Exception) {} }
+        toolsMenu = null
+    }
+
+    private fun getIconForTool(tool: DrawingTool): Int {
+        return when(tool) {
+            DrawingTool.PEN -> R.drawable.ic_pen
+            DrawingTool.PENCIL -> R.drawable.ic_pencil
+            DrawingTool.FOUNTAIN -> R.drawable.ic_fountain
+            DrawingTool.BRUSH -> R.drawable.ic_brush
+            DrawingTool.CALLIGRAPHY -> R.drawable.ic_calligraphy
+            DrawingTool.MARKER -> R.drawable.ic_marker
+            DrawingTool.ERASER -> R.drawable.ic_eraser
+            DrawingTool.LINE -> R.drawable.ic_line
+            DrawingTool.RECTANGLE -> R.drawable.ic_rect
+            DrawingTool.CIRCLE -> R.drawable.ic_circle
+            DrawingTool.ARROW -> R.drawable.ic_arrow
+            DrawingTool.LASER -> R.drawable.ic_laser
+            else -> R.drawable.ic_expand
+        }
     }
 
     private fun setupColorPalette() {
         val container = root.findViewById<LinearLayout>(R.id.colorContainer) ?: return
         container.removeAllViews()
         colorPalette.forEach { color ->
-            val sz = (28 * context.resources.displayMetrics.density).toInt()
+            val sz = (32 * context.resources.displayMetrics.density).toInt()
             val btn = View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(sz, sz).apply { setMargins(3, 3, 3, 3) }
+                layoutParams = LinearLayout.LayoutParams(sz, sz).apply { setMargins(4, 4, 4, 4) }
                 background = GradientDrawable().apply {
                     shape = GradientDrawable.OVAL
                     setColor(color)
@@ -251,6 +298,7 @@ class FloatingToolbar(
                 setOnClickListener {
                     canvas.currentColor = color
                     if (canvas.currentTool == DrawingTool.ERASER) canvas.currentTool = DrawingTool.PEN
+                    hideToolMenu()
                 }
             }
             container.addView(btn)
@@ -268,7 +316,7 @@ class FloatingToolbar(
             R.id.btnMarker, R.id.btnEraser, R.id.btnLine, R.id.btnRect, R.id.btnCircle, R.id.btnArrow, R.id.btnLaser, R.id.btnToolSelect)
         
         toolIds.forEach { id -> 
-            root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.55f 
+            root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.4f 
         }
     }
 
@@ -288,16 +336,11 @@ class FloatingToolbar(
     }
 
     fun startScreenshotCrop(bmp: Bitmap?) { bmp?.let { canvas.overlayBitmap(it) } }
-
-    fun refreshUi() {
-        applyPrefs()
-    }
-
+    fun refreshUi() { applyPrefs() }
     fun refreshPosition() {
         params.gravity = if (prefs.toolbarSide) Gravity.TOP or Gravity.END else Gravity.TOP or Gravity.START
         try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
     }
-
     fun getView(): View = root
 }
 

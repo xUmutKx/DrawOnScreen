@@ -24,15 +24,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
   public final LinearLayout rowResetAll;
 
   @NonNull
-  public final MaterialSwitch switchAutoPassthrough;
-
-  @NonNull
-  public final MaterialSwitch switchDebugOverlay;
-
-  @NonNull
-  public final MaterialSwitch switchDisableCrashLog;
-
-  @NonNull
   public final MaterialSwitch switchFingerDraw;
 
   @NonNull
@@ -54,9 +45,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
   public final MaterialSwitch switchPressure;
 
   @NonNull
-  public final MaterialSwitch switchShowBrush;
-
-  @NonNull
   public final MaterialSwitch switchShowCalligraphy;
 
   @NonNull
@@ -69,12 +57,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
   public final MaterialSwitch switchShowLaser;
 
   @NonNull
-  public final MaterialSwitch switchShowMarker;
-
-  @NonNull
-  public final MaterialSwitch switchShowPassthrough;
-
-  @NonNull
   public final MaterialSwitch switchShowPencil;
 
   @NonNull
@@ -82,9 +64,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
 
   @NonNull
   public final MaterialSwitch switchShowRuler;
-
-  @NonNull
-  public final MaterialSwitch switchShowScreenshot;
 
   @NonNull
   public final MaterialSwitch switchShowShapes;
@@ -105,35 +84,22 @@ public final class ActivitySettingsBinding implements ViewBinding {
   public final MaterialSwitch switchToolbarRight;
 
   @NonNull
-  public final MaterialSwitch switchVerboseLogging;
-
-  @NonNull
-  public final MaterialSwitch switchVibrate;
-
-  @NonNull
   public final MaterialToolbar toolbar;
 
   private ActivitySettingsBinding(@NonNull LinearLayout rootView, @NonNull LinearLayout rowResetAll,
-      @NonNull MaterialSwitch switchAutoPassthrough, @NonNull MaterialSwitch switchDebugOverlay,
-      @NonNull MaterialSwitch switchDisableCrashLog, @NonNull MaterialSwitch switchFingerDraw,
-      @NonNull MaterialSwitch switchHwAcceleration, @NonNull MaterialSwitch switchInkBleeding,
-      @NonNull MaterialSwitch switchKeepScreenOn, @NonNull MaterialSwitch switchMinimalUi,
-      @NonNull MaterialSwitch switchMinimizeOnDraw, @NonNull MaterialSwitch switchPressure,
-      @NonNull MaterialSwitch switchShowBrush, @NonNull MaterialSwitch switchShowCalligraphy,
+      @NonNull MaterialSwitch switchFingerDraw, @NonNull MaterialSwitch switchHwAcceleration,
+      @NonNull MaterialSwitch switchInkBleeding, @NonNull MaterialSwitch switchKeepScreenOn,
+      @NonNull MaterialSwitch switchMinimalUi, @NonNull MaterialSwitch switchMinimizeOnDraw,
+      @NonNull MaterialSwitch switchPressure, @NonNull MaterialSwitch switchShowCalligraphy,
       @NonNull MaterialSwitch switchShowEraser, @NonNull MaterialSwitch switchShowFountain,
-      @NonNull MaterialSwitch switchShowLaser, @NonNull MaterialSwitch switchShowMarker,
-      @NonNull MaterialSwitch switchShowPassthrough, @NonNull MaterialSwitch switchShowPencil,
+      @NonNull MaterialSwitch switchShowLaser, @NonNull MaterialSwitch switchShowPencil,
       @NonNull MaterialSwitch switchShowRedo, @NonNull MaterialSwitch switchShowRuler,
-      @NonNull MaterialSwitch switchShowScreenshot, @NonNull MaterialSwitch switchShowShapes,
-      @NonNull MaterialSwitch switchShowSpotlight, @NonNull MaterialSwitch switchShowUndo,
-      @NonNull MaterialSwitch switchSmoothing, @NonNull MaterialSwitch switchStylusOnly,
-      @NonNull MaterialSwitch switchToolbarRight, @NonNull MaterialSwitch switchVerboseLogging,
-      @NonNull MaterialSwitch switchVibrate, @NonNull MaterialToolbar toolbar) {
+      @NonNull MaterialSwitch switchShowShapes, @NonNull MaterialSwitch switchShowSpotlight,
+      @NonNull MaterialSwitch switchShowUndo, @NonNull MaterialSwitch switchSmoothing,
+      @NonNull MaterialSwitch switchStylusOnly, @NonNull MaterialSwitch switchToolbarRight,
+      @NonNull MaterialToolbar toolbar) {
     this.rootView = rootView;
     this.rowResetAll = rowResetAll;
-    this.switchAutoPassthrough = switchAutoPassthrough;
-    this.switchDebugOverlay = switchDebugOverlay;
-    this.switchDisableCrashLog = switchDisableCrashLog;
     this.switchFingerDraw = switchFingerDraw;
     this.switchHwAcceleration = switchHwAcceleration;
     this.switchInkBleeding = switchInkBleeding;
@@ -141,25 +107,19 @@ public final class ActivitySettingsBinding implements ViewBinding {
     this.switchMinimalUi = switchMinimalUi;
     this.switchMinimizeOnDraw = switchMinimizeOnDraw;
     this.switchPressure = switchPressure;
-    this.switchShowBrush = switchShowBrush;
     this.switchShowCalligraphy = switchShowCalligraphy;
     this.switchShowEraser = switchShowEraser;
     this.switchShowFountain = switchShowFountain;
     this.switchShowLaser = switchShowLaser;
-    this.switchShowMarker = switchShowMarker;
-    this.switchShowPassthrough = switchShowPassthrough;
     this.switchShowPencil = switchShowPencil;
     this.switchShowRedo = switchShowRedo;
     this.switchShowRuler = switchShowRuler;
-    this.switchShowScreenshot = switchShowScreenshot;
     this.switchShowShapes = switchShowShapes;
     this.switchShowSpotlight = switchShowSpotlight;
     this.switchShowUndo = switchShowUndo;
     this.switchSmoothing = switchSmoothing;
     this.switchStylusOnly = switchStylusOnly;
     this.switchToolbarRight = switchToolbarRight;
-    this.switchVerboseLogging = switchVerboseLogging;
-    this.switchVibrate = switchVibrate;
     this.toolbar = toolbar;
   }
 
@@ -193,24 +153,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
       id = R.id.rowResetAll;
       LinearLayout rowResetAll = ViewBindings.findChildViewById(rootView, id);
       if (rowResetAll == null) {
-        break missingId;
-      }
-
-      id = R.id.switchAutoPassthrough;
-      MaterialSwitch switchAutoPassthrough = ViewBindings.findChildViewById(rootView, id);
-      if (switchAutoPassthrough == null) {
-        break missingId;
-      }
-
-      id = R.id.switchDebugOverlay;
-      MaterialSwitch switchDebugOverlay = ViewBindings.findChildViewById(rootView, id);
-      if (switchDebugOverlay == null) {
-        break missingId;
-      }
-
-      id = R.id.switchDisableCrashLog;
-      MaterialSwitch switchDisableCrashLog = ViewBindings.findChildViewById(rootView, id);
-      if (switchDisableCrashLog == null) {
         break missingId;
       }
 
@@ -256,12 +198,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.switchShowBrush;
-      MaterialSwitch switchShowBrush = ViewBindings.findChildViewById(rootView, id);
-      if (switchShowBrush == null) {
-        break missingId;
-      }
-
       id = R.id.switchShowCalligraphy;
       MaterialSwitch switchShowCalligraphy = ViewBindings.findChildViewById(rootView, id);
       if (switchShowCalligraphy == null) {
@@ -286,18 +222,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.switchShowMarker;
-      MaterialSwitch switchShowMarker = ViewBindings.findChildViewById(rootView, id);
-      if (switchShowMarker == null) {
-        break missingId;
-      }
-
-      id = R.id.switchShowPassthrough;
-      MaterialSwitch switchShowPassthrough = ViewBindings.findChildViewById(rootView, id);
-      if (switchShowPassthrough == null) {
-        break missingId;
-      }
-
       id = R.id.switchShowPencil;
       MaterialSwitch switchShowPencil = ViewBindings.findChildViewById(rootView, id);
       if (switchShowPencil == null) {
@@ -313,12 +237,6 @@ public final class ActivitySettingsBinding implements ViewBinding {
       id = R.id.switchShowRuler;
       MaterialSwitch switchShowRuler = ViewBindings.findChildViewById(rootView, id);
       if (switchShowRuler == null) {
-        break missingId;
-      }
-
-      id = R.id.switchShowScreenshot;
-      MaterialSwitch switchShowScreenshot = ViewBindings.findChildViewById(rootView, id);
-      if (switchShowScreenshot == null) {
         break missingId;
       }
 
@@ -358,33 +276,18 @@ public final class ActivitySettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.switchVerboseLogging;
-      MaterialSwitch switchVerboseLogging = ViewBindings.findChildViewById(rootView, id);
-      if (switchVerboseLogging == null) {
-        break missingId;
-      }
-
-      id = R.id.switchVibrate;
-      MaterialSwitch switchVibrate = ViewBindings.findChildViewById(rootView, id);
-      if (switchVibrate == null) {
-        break missingId;
-      }
-
       id = R.id.toolbar;
       MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
       if (toolbar == null) {
         break missingId;
       }
 
-      return new ActivitySettingsBinding((LinearLayout) rootView, rowResetAll,
-          switchAutoPassthrough, switchDebugOverlay, switchDisableCrashLog, switchFingerDraw,
+      return new ActivitySettingsBinding((LinearLayout) rootView, rowResetAll, switchFingerDraw,
           switchHwAcceleration, switchInkBleeding, switchKeepScreenOn, switchMinimalUi,
-          switchMinimizeOnDraw, switchPressure, switchShowBrush, switchShowCalligraphy,
-          switchShowEraser, switchShowFountain, switchShowLaser, switchShowMarker,
-          switchShowPassthrough, switchShowPencil, switchShowRedo, switchShowRuler,
-          switchShowScreenshot, switchShowShapes, switchShowSpotlight, switchShowUndo,
-          switchSmoothing, switchStylusOnly, switchToolbarRight, switchVerboseLogging,
-          switchVibrate, toolbar);
+          switchMinimizeOnDraw, switchPressure, switchShowCalligraphy, switchShowEraser,
+          switchShowFountain, switchShowLaser, switchShowPencil, switchShowRedo, switchShowRuler,
+          switchShowShapes, switchShowSpotlight, switchShowUndo, switchSmoothing, switchStylusOnly,
+          switchToolbarRight, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

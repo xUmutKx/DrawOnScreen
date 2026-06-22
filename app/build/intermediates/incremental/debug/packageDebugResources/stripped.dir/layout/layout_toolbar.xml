@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Tool Selection -->
+        <!-- Tool Selection Dropdown -->
         <ImageButton
             android:id="@+id/btnToolSelect"
             style="@style/ToolButton"
@@ -76,15 +76,20 @@
 
         <!-- === SHAPES === -->
         <ImageButton android:id="@+id/btnEraser"
-            style="@style/ToolButton" android:src="@drawable/ic_eraser"/>
+            style="@style/ToolButton" android:src="@drawable/ic_eraser"
+            android:contentDescription="Eraser"/>
         <ImageButton android:id="@+id/btnLine"
-            style="@style/ToolButton" android:src="@drawable/ic_line"/>
+            style="@style/ToolButton" android:src="@drawable/ic_line"
+            android:contentDescription="Line"/>
         <ImageButton android:id="@+id/btnRect"
-            style="@style/ToolButton" android:src="@drawable/ic_rect"/>
+            style="@style/ToolButton" android:src="@drawable/ic_rect"
+            android:contentDescription="Rectangle"/>
         <ImageButton android:id="@+id/btnCircle"
-            style="@style/ToolButton" android:src="@drawable/ic_circle"/>
+            style="@style/ToolButton" android:src="@drawable/ic_circle"
+            android:contentDescription="Circle"/>
         <ImageButton android:id="@+id/btnArrow"
-            style="@style/ToolButton" android:src="@drawable/ic_arrow"/>
+            style="@style/ToolButton" android:src="@drawable/ic_arrow"
+            android:contentDescription="Arrow"/>
         <ImageButton android:id="@+id/btnLaser"
             style="@style/ToolButton" android:src="@drawable/ic_laser"
             android:contentDescription="Laser pointer"/>
@@ -94,16 +99,20 @@
 
         <!-- === ACTIONS === -->
         <ImageButton android:id="@+id/btnUndo"
-            style="@style/ToolButton" android:src="@drawable/ic_undo"/>
+            style="@style/ToolButton" android:src="@drawable/ic_undo"
+            android:contentDescription="Undo"/>
         <ImageButton android:id="@+id/btnRedo"
-            style="@style/ToolButton" android:src="@drawable/ic_redo"/>
+            style="@style/ToolButton" android:src="@drawable/ic_redo"
+            android:contentDescription="Redo"/>
         <ImageButton android:id="@+id/btnClear"
-            style="@style/ToolButton" android:src="@drawable/ic_delete"/>
+            style="@style/ToolButton" android:src="@drawable/ic_delete"
+            android:contentDescription="Clear All"/>
         <ImageButton android:id="@+id/btnPassThrough"
-            style="@style/ToolButton" android:src="@drawable/ic_pass_through"/>
+            style="@style/ToolButton" android:src="@drawable/ic_pass_through"
+            android:contentDescription="Pass-through"/>
         <ImageButton android:id="@+id/btnScreenshot"
             style="@style/ToolButton" android:src="@drawable/ic_screenshot"
-            android:contentDescription="Screenshot crop"/>
+            android:contentDescription="Screenshot"/>
         <ImageButton android:id="@+id/btnSpotlight"
             style="@style/ToolButton" android:src="@drawable/ic_spotlight"
             android:contentDescription="Spotlight"/>
@@ -169,6 +178,7 @@
             android:background="@color/divider" android:layout_marginVertical="4dp"/>
 
         <ImageButton android:id="@+id/btnClose"
-            style="@style/ToolButtonAccent" android:src="@drawable/ic_close"/>
+            style="@style/ToolButtonAccent" android:src="@drawable/ic_close"
+            android:contentDescription="Close"/>
     </LinearLayout>
 </LinearLayout>

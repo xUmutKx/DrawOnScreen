@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.DrawOnScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/on_surface</item>
-        <item name="colorError">#CF6679</item>
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:statusBarColor">@color/background</item>
-        <item name="android:navigationBarColor">@color/background</item>
+    <style name="Theme.DrawOnScreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="android:windowBackground">#000000</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <item name="colorSurface">#111111</item>
+        <item name="colorOnSurface">#FFFFFF</item>
     </style>
 
     <style name="SectionHeader">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/on_surface_dim</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0.12</item>
+        <item name="android:letterSpacing">0.15</item>
         <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 
     <style name="PrefRow">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_height">64dp</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">16dp</item>
@@ -39,48 +35,40 @@
     </style>
 
     <style name="PrefIcon">
-        <item name="android:layout_width">22dp</item>
-        <item name="android:layout_height">22dp</item>
-        <item name="tint">@color/on_surface_dim</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="tint">#AAAAAA</item>
         <item name="android:layout_marginEnd">16dp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
     </style>
 
     <style name="PrefTitle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/on_surface</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- Switch crash fix: textOn/textOff removed entirely for SDK 36 compatibility -->
     <style name="PrefSwitch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="showText">false</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
     </style>
 
     <style name="ToolButton">
-        <item name="android:layout_width">44dp</item>
-        <item name="android:layout_height">44dp</item>
-        <item name="tint">@color/icon_tint</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="tint">#FFFFFF</item>
         <item name="android:background">@drawable/bg_tool_button</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 
     <style name="ToolButtonAccent">
-        <item name="android:layout_width">44dp</item>
-        <item name="android:layout_height">44dp</item>
-        <item name="tint">@color/icon_tint</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="tint">#FF5252</item>
         <item name="android:background">@drawable/bg_tool_button_accent</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 </resources>

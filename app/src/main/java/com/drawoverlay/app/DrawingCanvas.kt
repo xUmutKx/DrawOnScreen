@@ -140,8 +140,26 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 p.style = Paint.Style.STROKE
                 p.strokeWidth = strokeWidth * 2f
                 p.color = Color.RED
-                p.alpha = 220
-                p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
+                p.alpha = 255
+                if (android.os.Build.VERSION.SDK_INT >= 33) {
+                    try {
+                        val shader = RuntimeShader("""
+                            uniform float2 iResolution;
+                            uniform float4 iColor;
+                            layout(color) uniform half4 iGlowColor;
+                            
+                            half4 main(float2 fragCoord) {
+                                return iColor;
+                            }
+                        """.trimIndent())
+                        // Note: Real AGSL glow is complex, using simple blur for now
+                        p.maskFilter = BlurMaskFilter(strokeWidth * 2f, BlurMaskFilter.Blur.OUTER)
+                    } catch (_: Exception) {
+                        p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
+                    }
+                } else {
+                    p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
+                }
             }
             else -> {
                 p.style = Paint.Style.STROKE
