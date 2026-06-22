@@ -3244,6 +3244,7 @@ id btnBrush
 id btnCalligraphy
 id btnCircle
 id btnClear
+id btnClearMenu
 id btnClose
 id btnCollapse
 id btnEraser
@@ -3661,6 +3662,7 @@ id toggle
 id toolbar
 id toolbarRoot
 id toolsContainer
+id toolsGrid
 id top
 id topPanel
 id touch_outside
@@ -3838,6 +3840,7 @@ layout ime_secondary_split_test_activity
 layout item_setting_switch
 layout item_spinner
 layout layout_toolbar
+layout layout_tools_menu
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

@@ -49,6 +49,7 @@ data class DrawingPath(
     fun isFreehand() = tool in listOf(
         DrawingTool.PEN, DrawingTool.PENCIL, DrawingTool.FOUNTAIN,
         DrawingTool.BRUSH, DrawingTool.CALLIGRAPHY, DrawingTool.MARKER,
-        DrawingTool.ERASER, DrawingTool.LASER
+        DrawingTool.CRAYON, DrawingTool.GLOW, DrawingTool.AIRBRUSH,
+        DrawingTool.CHARCOAL, DrawingTool.ERASER, DrawingTool.LASER
     )
 }

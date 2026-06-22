@@ -3243,6 +3243,7 @@ int id btnBrush 0x7f080063
 int id btnCalligraphy 0x7f080064
 int id btnCircle 0x7f080065
 int id btnClear 0x7f080066
+int id btnClearMenu 0x7f080239
 int id btnClose 0x7f080067
 int id btnCollapse 0x7f080068
 int id btnEraser 0x7f080069
@@ -3660,6 +3661,7 @@ int id toggle 0x7f08020d
 int id toolbar 0x7f08020e
 int id toolbarRoot 0x7f08020f
 int id toolsContainer 0x7f080210
+int id toolsGrid 0x7f08023a
 int id top 0x7f080211
 int id topPanel 0x7f080212
 int id touch_outside 0x7f080213
@@ -3837,6 +3839,7 @@ int layout ime_secondary_split_test_activity 0x7f0b002f
 int layout item_setting_switch 0x7f0b0030
 int layout item_spinner 0x7f0b0031
 int layout layout_toolbar 0x7f0b0032
+int layout layout_tools_menu 0x7f0b0070
 int layout m3_alert_dialog 0x7f0b0033
 int layout m3_alert_dialog_actions 0x7f0b0034
 int layout m3_alert_dialog_title 0x7f0b0035

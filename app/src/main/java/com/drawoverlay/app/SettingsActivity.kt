@@ -1,10 +1,13 @@
 package com.drawoverlay.app
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.drawoverlay.app.databinding.ActivitySettingsBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -25,6 +28,7 @@ class SettingsActivity : AppCompatActivity() {
 
         loadPrefs()
         setupListeners()
+        updateIconHighlight()
     }
 
     private fun loadPrefs() {
@@ -81,8 +85,26 @@ class SettingsActivity : AppCompatActivity() {
         setupRow(b.switchShowPencil.parent as android.view.View, b.switchShowPencil) { prefs.showPencil = it }
         setupRow(b.switchHwAcceleration.parent as android.view.View, b.switchHwAcceleration) { prefs.hwAcceleration = it }
 
+        b.colorPreview.backgroundTintList = android.content.res.ColorStateList.valueOf(prefs.defaultColor)
+        (b.colorPreview.parent as android.view.View).setOnClickListener {
+            val colors = listOf(android.graphics.Color.WHITE, android.graphics.Color.BLACK, android.graphics.Color.RED, android.graphics.Color.GREEN, android.graphics.Color.BLUE, android.graphics.Color.YELLOW)
+            val names = arrayOf("White", "Black", "Red", "Green", "Blue", "Yellow")
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Select Default Color")
+                .setItems(names) { _, which ->
+                    prefs.defaultColor = colors[which]
+                    b.colorPreview.backgroundTintList = android.content.res.ColorStateList.valueOf(colors[which])
+                }
+                .show()
+        }
+
+        b.iconDefault.setOnClickListener { changeAppIcon("Default") }
+        b.iconBlue.setOnClickListener { changeAppIcon("Blue") }
+        b.iconRed.setOnClickListener { changeAppIcon("Red") }
+        b.iconGreen.setOnClickListener { changeAppIcon("Green") }
+
         b.rowResetAll.setOnClickListener {
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(this)
                 .setTitle("Reset Settings")
                 .setMessage("All settings will return to default. Are you sure?")
                 .setPositiveButton("Reset") { _, _ ->
@@ -92,6 +114,52 @@ class SettingsActivity : AppCompatActivity() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+    }
+
+    private fun changeAppIcon(variant: String) {
+        val pm = packageManager
+        val packageName = packageName
+        val aliases = listOf("MainActivityBlue", "MainActivityRed", "MainActivityGreen")
+        val activeAlias = when(variant) {
+            "Blue" -> "MainActivityBlue"
+            "Red" -> "MainActivityRed"
+            "Green" -> "MainActivityGreen"
+            else -> null
+        }
+
+        // Enable chosen alias, disable others and main activity
+        pm.setComponentEnabledSetting(
+            ComponentName(packageName, "$packageName.MainActivity"),
+            if (activeAlias == null) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+        aliases.forEach { alias ->
+            pm.setComponentEnabledSetting(
+                ComponentName(packageName, "$packageName.$alias"),
+                if (alias == activeAlias) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+            )
+        }
+        
+        updateIconHighlight()
+    }
+
+    private fun updateIconHighlight() {
+        val pm = packageManager
+        val packageName = packageName
+        
+        fun isEnabled(alias: String): Boolean {
+            val state = pm.getComponentEnabledSetting(ComponentName(packageName, "$packageName.$alias"))
+            return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        }
+
+        val isDefault = pm.getComponentEnabledSetting(ComponentName(packageName, "$packageName.MainActivity")) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+
+        b.iconDefault.strokeWidth = if (isDefault) 4 else 0
+        b.iconBlue.strokeWidth = if (isEnabled("MainActivityBlue")) 4 else 0
+        b.iconRed.strokeWidth = if (isEnabled("MainActivityRed")) 4 else 0
+        b.iconGreen.strokeWidth = if (isEnabled("MainActivityGreen")) 4 else 0
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

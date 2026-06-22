@@ -54,6 +54,7 @@ id btnBrush
 id btnCalligraphy
 id btnCircle
 id btnClear
+id btnClearMenu
 id btnClose
 id btnCollapse
 id btnEraser
@@ -106,6 +107,7 @@ id switchToolbarRight
 id toolbar
 id toolbarRoot
 id toolsContainer
+id toolsGrid
 id tvDesc
 id tvStatus
 id tvTitle
@@ -114,6 +116,7 @@ layout activity_settings
 layout item_setting_switch
 layout item_spinner
 layout layout_toolbar
+layout layout_tools_menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name

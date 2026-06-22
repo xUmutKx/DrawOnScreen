@@ -90,11 +90,12 @@ class FloatingToolbar(
         root.findViewById<View>(R.id.btnBrush)?.visibility = View.GONE
         root.findViewById<View>(R.id.btnMarker)?.visibility = View.GONE
 
-        val defaultTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
-        canvas.currentTool = defaultTool
+        val currentTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
+        canvas.currentTool = currentTool
         canvas.strokeWidth = prefs.defaultStroke
+        canvas.currentColor = prefs.defaultColor
         
-        val id = getToolButtonId(defaultTool)
+        val id = getToolButtonId(currentTool)
         if (id != 0) updateToolHighlight(id)
     }
 
@@ -103,6 +104,9 @@ class FloatingToolbar(
             DrawingTool.PEN -> R.id.btnPen
             DrawingTool.PENCIL -> R.id.btnPencil
             DrawingTool.FOUNTAIN -> R.id.btnFountain
+            DrawingTool.BRUSH -> R.id.btnBrush
+            DrawingTool.CALLIGRAPHY -> R.id.btnCalligraphy
+            DrawingTool.MARKER -> R.id.btnMarker
             DrawingTool.ERASER -> R.id.btnEraser
             DrawingTool.LINE -> R.id.btnLine
             DrawingTool.RECTANGLE -> R.id.btnRect
@@ -228,6 +232,7 @@ class FloatingToolbar(
                 setImageResource(getIconForTool(tool))
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
                 setPadding(14, 14, 14, 14)
+                setColorFilter(Color.WHITE)
                 alpha = if (canvas.currentTool == tool) 1f else 0.5f
                 setOnClickListener { selectTool(tool, 0) }
             }
@@ -246,8 +251,7 @@ class FloatingToolbar(
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = params.gravity
-            val offset = (230 * context.resources.displayMetrics.density).toInt()
-            x = if (prefs.toolbarSide) params.x + offset else params.x + root.width
+            x = params.x + root.width
             y = params.y
         }
         
@@ -273,6 +277,10 @@ class FloatingToolbar(
             DrawingTool.BRUSH -> R.drawable.ic_brush
             DrawingTool.CALLIGRAPHY -> R.drawable.ic_calligraphy
             DrawingTool.MARKER -> R.drawable.ic_marker
+            DrawingTool.CRAYON -> R.drawable.ic_pen // Need crayon icon, using pen for now
+            DrawingTool.GLOW -> R.drawable.ic_laser // Need glow icon
+            DrawingTool.AIRBRUSH -> R.drawable.ic_brush // Need airbrush icon
+            DrawingTool.CHARCOAL -> R.drawable.ic_pencil // Need charcoal icon
             DrawingTool.ERASER -> R.drawable.ic_eraser
             DrawingTool.LINE -> R.drawable.ic_line
             DrawingTool.RECTANGLE -> R.drawable.ic_rect

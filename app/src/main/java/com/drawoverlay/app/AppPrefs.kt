@@ -21,19 +21,19 @@ class AppPrefs(context: Context) {
     var autoPassthrough  get() = p.getBoolean("auto_passthrough", false)  ; set(v) = p.edit().putBoolean("auto_passthrough", v).apply()
     var smoothing        get() = p.getBoolean("smoothing", true)          ; set(v) = p.edit().putBoolean("smoothing", v).apply()
     var pressureSensitive get() = p.getBoolean("pressure_sensitive", true); set(v) = p.edit().putBoolean("pressure_sensitive", v).apply()
-    var inkBleeding      get() = p.getBoolean("ink_bleeding", false)      ; set(v) = p.edit().putBoolean("ink_bleeding", v).apply()
     var stabilization    get() = p.getInt("stabilization", 5)             ; set(v) = p.edit().putInt("stabilization", v).apply()
+    var inkBleeding      get() = p.getBoolean("ink_bleeding", false)      ; set(v) = p.edit().putBoolean("ink_bleeding", v).apply()
     var textureIntensity get() = p.getFloat("texture_intensity", 0.5f)    ; set(v) = p.edit().putFloat("texture_intensity", v).apply()
 
     // Smart Tools
-    var showRuler        get() = p.getBoolean("show_ruler_tool", true)    ; set(v) = p.edit().putBoolean("show_ruler_tool", v).apply()
+    var showRuler        get() = p.getBoolean("show_ruler_tool", false)   ; set(v) = p.edit().putBoolean("show_ruler_tool", v).apply()
     var rulerRotation    get() = p.getFloat("ruler_rot", 0f)              ; set(v) = p.edit().putFloat("ruler_rot", v).apply()
     var rulerX           get() = p.getFloat("ruler_x", 100f)              ; set(v) = p.edit().putFloat("ruler_x", v).apply()
     var rulerY           get() = p.getFloat("ruler_y", 400f)              ; set(v) = p.edit().putFloat("ruler_y", v).apply()
 
     // Toolbar visibility
     var showUndo         get() = p.getBoolean("show_undo", true)          ; set(v) = p.edit().putBoolean("show_undo", v).apply()
-    var showRedo         get() = p.getBoolean("show_redo", false)         ; set(v) = p.edit().putBoolean("show_redo", v).apply()
+    var showRedo         get() = p.getBoolean("show_redo", true)          ; set(v) = p.edit().putBoolean("show_redo", v).apply()
     var showEraser       get() = p.getBoolean("show_eraser", true)        ; set(v) = p.edit().putBoolean("show_eraser", v).apply()
     var showShapes       get() = p.getBoolean("show_shapes", true)        ; set(v) = p.edit().putBoolean("show_shapes", v).apply()
     var showLaser        get() = p.getBoolean("show_laser", true)         ; set(v) = p.edit().putBoolean("show_laser", v).apply()
@@ -46,7 +46,7 @@ class AppPrefs(context: Context) {
 
     // Defaults
     var defaultTool      get() = p.getString("default_tool", "PEN") ?: "PEN" ; set(v) = p.edit().putString("default_tool", v).apply()
-    var defaultColor     get() = p.getInt("default_color", Color.RED)        ; set(v) = p.edit().putInt("default_color", v).apply()
+    var defaultColor     get() = p.getInt("default_color", Color.WHITE)      ; set(v) = p.edit().putInt("default_color", v).apply()
     var defaultStroke    get() = p.getFloat("default_stroke", 8f)            ; set(v) = p.edit().putFloat("default_stroke", v).apply()
     var toolbarOpacity   get() = p.getInt("toolbar_opacity", 220)            ; set(v) = p.edit().putInt("toolbar_opacity", v).apply()
     var toolbarSide      get() = p.getBoolean("toolbar_side_right", false)   ; set(v) = p.edit().putBoolean("toolbar_side_right", v).apply()
