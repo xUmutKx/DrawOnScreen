@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.drawoverlay.app-mergeDebugResources-31:/values-small-v4/values-small-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\umuts\\.gradle\\caches\\8.13\\transforms\\d42da8ce1f066d5054c4b4fc6bed8eec\\transformed\\material-1.12.0\\res\\values-small-v4\\values-small-v4.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,128,198,270",
+                        "endColumns": "72,69,71,69",
+                        "endOffsets": "123,193,265,335"
+                    }
+                }
+            ]
+        }
+    ]
+}

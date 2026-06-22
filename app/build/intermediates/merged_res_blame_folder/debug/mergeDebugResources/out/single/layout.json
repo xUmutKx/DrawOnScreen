@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "com.drawoverlay.app-mergeDebugResources-32:/layout/activity_main.xml",
+        "source": "com.drawoverlay.app-main-35:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.drawoverlay.app-mergeDebugResources-32:/layout/item_setting_switch.xml",
+        "source": "com.drawoverlay.app-main-35:/layout/item_setting_switch.xml"
+    },
+    {
+        "merged": "com.drawoverlay.app-mergeDebugResources-32:/layout/item_spinner.xml",
+        "source": "com.drawoverlay.app-main-35:/layout/item_spinner.xml"
+    },
+    {
+        "merged": "com.drawoverlay.app-mergeDebugResources-32:/layout/layout_toolbar.xml",
+        "source": "com.drawoverlay.app-main-35:/layout/layout_toolbar.xml"
+    },
+    {
+        "merged": "com.drawoverlay.app-mergeDebugResources-32:/layout/activity_settings.xml",
+        "source": "com.drawoverlay.app-main-35:/layout/activity_settings.xml"
+    }
+]

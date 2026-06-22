@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.drawoverlay.app-mergeDebugResources-31:/values-ldltr-v21/values-ldltr-v21.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\umuts\\.gradle\\caches\\8.13\\transforms\\9c1699f13e20795017d6032d7bf1ce33\\transformed\\appcompat-1.7.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "112",
+                        "endOffsets": "163"
+                    }
+                }
+            ]
+        }
+    ]
+}
