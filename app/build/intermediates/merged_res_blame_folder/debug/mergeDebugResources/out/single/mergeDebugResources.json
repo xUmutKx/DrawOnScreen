@@ -108,8 +108,8 @@
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_play.xml"
     },
     {
-        "merged": "com.drawoverlay.app-debug-33:/drawable_bg_tool_button.xml.flat",
-        "source": "com.drawoverlay.app-main-35:/drawable/bg_tool_button.xml"
+        "merged": "com.drawoverlay.app-debug-33:/layout_layout_toolbar.xml.flat",
+        "source": "com.drawoverlay.app-main-35:/layout/layout_toolbar.xml"
     },
     {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_launcher_fg_red.xml.flat",
@@ -192,6 +192,10 @@
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_check_circle.xml"
     },
     {
+        "merged": "com.drawoverlay.app-debug-33:/drawable_ic_custom_launcher.xml.flat",
+        "source": "com.drawoverlay.app-main-35:/drawable/ic_custom_launcher.xml"
+    },
+    {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_launcher_fg_green.xml.flat",
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\drawable\\ic_launcher_fg_green.xml"
     },
@@ -214,10 +218,6 @@
     {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\layout_activity_main.xml.flat",
         "source": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-main-35:\\layout\\activity_main.xml"
-    },
-    {
-        "merged": "com.drawoverlay.app-debug-33:/layout_activity_main.xml.flat",
-        "source": "com.drawoverlay.app-main-35:/layout/activity_main.xml"
     },
     {
         "merged": "C:\\Users\\umuts\\.gradle\\daemon\\8.13\\com.drawoverlay.app-debug-33:\\drawable_ic_delete.xml.flat",

@@ -4,6 +4,7 @@ package com.drawoverlay.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
@@ -21,67 +22,16 @@ public final class LayoutToolbarBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final ImageButton btnArrow;
-
-  @NonNull
-  public final ImageButton btnBrush;
-
-  @NonNull
-  public final ImageButton btnCalligraphy;
-
-  @NonNull
-  public final ImageButton btnCircle;
-
-  @NonNull
   public final ImageButton btnClear;
 
   @NonNull
   public final ImageButton btnClose;
 
   @NonNull
-  public final ImageButton btnCollapse;
-
-  @NonNull
   public final ImageButton btnEraser;
 
   @NonNull
-  public final ImageButton btnFountain;
-
-  @NonNull
-  public final ImageButton btnLaser;
-
-  @NonNull
-  public final ImageButton btnLine;
-
-  @NonNull
-  public final ImageButton btnMarker;
-
-  @NonNull
-  public final ImageButton btnPassThrough;
-
-  @NonNull
   public final ImageButton btnPen;
-
-  @NonNull
-  public final ImageButton btnPencil;
-
-  @NonNull
-  public final ImageButton btnRect;
-
-  @NonNull
-  public final ImageButton btnRedo;
-
-  @NonNull
-  public final ImageButton btnRuler;
-
-  @NonNull
-  public final ImageButton btnScreenshot;
-
-  @NonNull
-  public final ImageButton btnSpotlight;
-
-  @NonNull
-  public final ImageButton btnStylusAction;
 
   @NonNull
   public final ImageButton btnToolSelect;
@@ -93,13 +43,10 @@ public final class LayoutToolbarBinding implements ViewBinding {
   public final LinearLayout colorContainer;
 
   @NonNull
-  public final LinearLayout dragHandle;
+  public final View dragHandle;
 
   @NonNull
-  public final Slider opacitySlider;
-
-  @NonNull
-  public final View shapesDivider;
+  public final LinearLayout expandableMenu;
 
   @NonNull
   public final Slider strokeSlider;
@@ -108,53 +55,27 @@ public final class LayoutToolbarBinding implements ViewBinding {
   public final LinearLayout toolbarRoot;
 
   @NonNull
-  public final LinearLayout toolsContainer;
+  public final GridLayout toolsGrid;
 
-  private LayoutToolbarBinding(@NonNull LinearLayout rootView, @NonNull ImageButton btnArrow,
-      @NonNull ImageButton btnBrush, @NonNull ImageButton btnCalligraphy,
-      @NonNull ImageButton btnCircle, @NonNull ImageButton btnClear, @NonNull ImageButton btnClose,
-      @NonNull ImageButton btnCollapse, @NonNull ImageButton btnEraser,
-      @NonNull ImageButton btnFountain, @NonNull ImageButton btnLaser, @NonNull ImageButton btnLine,
-      @NonNull ImageButton btnMarker, @NonNull ImageButton btnPassThrough,
-      @NonNull ImageButton btnPen, @NonNull ImageButton btnPencil, @NonNull ImageButton btnRect,
-      @NonNull ImageButton btnRedo, @NonNull ImageButton btnRuler,
-      @NonNull ImageButton btnScreenshot, @NonNull ImageButton btnSpotlight,
-      @NonNull ImageButton btnStylusAction, @NonNull ImageButton btnToolSelect,
-      @NonNull ImageButton btnUndo, @NonNull LinearLayout colorContainer,
-      @NonNull LinearLayout dragHandle, @NonNull Slider opacitySlider, @NonNull View shapesDivider,
-      @NonNull Slider strokeSlider, @NonNull LinearLayout toolbarRoot,
-      @NonNull LinearLayout toolsContainer) {
+  private LayoutToolbarBinding(@NonNull LinearLayout rootView, @NonNull ImageButton btnClear,
+      @NonNull ImageButton btnClose, @NonNull ImageButton btnEraser, @NonNull ImageButton btnPen,
+      @NonNull ImageButton btnToolSelect, @NonNull ImageButton btnUndo,
+      @NonNull LinearLayout colorContainer, @NonNull View dragHandle,
+      @NonNull LinearLayout expandableMenu, @NonNull Slider strokeSlider,
+      @NonNull LinearLayout toolbarRoot, @NonNull GridLayout toolsGrid) {
     this.rootView = rootView;
-    this.btnArrow = btnArrow;
-    this.btnBrush = btnBrush;
-    this.btnCalligraphy = btnCalligraphy;
-    this.btnCircle = btnCircle;
     this.btnClear = btnClear;
     this.btnClose = btnClose;
-    this.btnCollapse = btnCollapse;
     this.btnEraser = btnEraser;
-    this.btnFountain = btnFountain;
-    this.btnLaser = btnLaser;
-    this.btnLine = btnLine;
-    this.btnMarker = btnMarker;
-    this.btnPassThrough = btnPassThrough;
     this.btnPen = btnPen;
-    this.btnPencil = btnPencil;
-    this.btnRect = btnRect;
-    this.btnRedo = btnRedo;
-    this.btnRuler = btnRuler;
-    this.btnScreenshot = btnScreenshot;
-    this.btnSpotlight = btnSpotlight;
-    this.btnStylusAction = btnStylusAction;
     this.btnToolSelect = btnToolSelect;
     this.btnUndo = btnUndo;
     this.colorContainer = colorContainer;
     this.dragHandle = dragHandle;
-    this.opacitySlider = opacitySlider;
-    this.shapesDivider = shapesDivider;
+    this.expandableMenu = expandableMenu;
     this.strokeSlider = strokeSlider;
     this.toolbarRoot = toolbarRoot;
-    this.toolsContainer = toolsContainer;
+    this.toolsGrid = toolsGrid;
   }
 
   @Override
@@ -184,30 +105,6 @@ public final class LayoutToolbarBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnArrow;
-      ImageButton btnArrow = ViewBindings.findChildViewById(rootView, id);
-      if (btnArrow == null) {
-        break missingId;
-      }
-
-      id = R.id.btnBrush;
-      ImageButton btnBrush = ViewBindings.findChildViewById(rootView, id);
-      if (btnBrush == null) {
-        break missingId;
-      }
-
-      id = R.id.btnCalligraphy;
-      ImageButton btnCalligraphy = ViewBindings.findChildViewById(rootView, id);
-      if (btnCalligraphy == null) {
-        break missingId;
-      }
-
-      id = R.id.btnCircle;
-      ImageButton btnCircle = ViewBindings.findChildViewById(rootView, id);
-      if (btnCircle == null) {
-        break missingId;
-      }
-
       id = R.id.btnClear;
       ImageButton btnClear = ViewBindings.findChildViewById(rootView, id);
       if (btnClear == null) {
@@ -220,93 +117,15 @@ public final class LayoutToolbarBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.btnCollapse;
-      ImageButton btnCollapse = ViewBindings.findChildViewById(rootView, id);
-      if (btnCollapse == null) {
-        break missingId;
-      }
-
       id = R.id.btnEraser;
       ImageButton btnEraser = ViewBindings.findChildViewById(rootView, id);
       if (btnEraser == null) {
         break missingId;
       }
 
-      id = R.id.btnFountain;
-      ImageButton btnFountain = ViewBindings.findChildViewById(rootView, id);
-      if (btnFountain == null) {
-        break missingId;
-      }
-
-      id = R.id.btnLaser;
-      ImageButton btnLaser = ViewBindings.findChildViewById(rootView, id);
-      if (btnLaser == null) {
-        break missingId;
-      }
-
-      id = R.id.btnLine;
-      ImageButton btnLine = ViewBindings.findChildViewById(rootView, id);
-      if (btnLine == null) {
-        break missingId;
-      }
-
-      id = R.id.btnMarker;
-      ImageButton btnMarker = ViewBindings.findChildViewById(rootView, id);
-      if (btnMarker == null) {
-        break missingId;
-      }
-
-      id = R.id.btnPassThrough;
-      ImageButton btnPassThrough = ViewBindings.findChildViewById(rootView, id);
-      if (btnPassThrough == null) {
-        break missingId;
-      }
-
       id = R.id.btnPen;
       ImageButton btnPen = ViewBindings.findChildViewById(rootView, id);
       if (btnPen == null) {
-        break missingId;
-      }
-
-      id = R.id.btnPencil;
-      ImageButton btnPencil = ViewBindings.findChildViewById(rootView, id);
-      if (btnPencil == null) {
-        break missingId;
-      }
-
-      id = R.id.btnRect;
-      ImageButton btnRect = ViewBindings.findChildViewById(rootView, id);
-      if (btnRect == null) {
-        break missingId;
-      }
-
-      id = R.id.btnRedo;
-      ImageButton btnRedo = ViewBindings.findChildViewById(rootView, id);
-      if (btnRedo == null) {
-        break missingId;
-      }
-
-      id = R.id.btnRuler;
-      ImageButton btnRuler = ViewBindings.findChildViewById(rootView, id);
-      if (btnRuler == null) {
-        break missingId;
-      }
-
-      id = R.id.btnScreenshot;
-      ImageButton btnScreenshot = ViewBindings.findChildViewById(rootView, id);
-      if (btnScreenshot == null) {
-        break missingId;
-      }
-
-      id = R.id.btnSpotlight;
-      ImageButton btnSpotlight = ViewBindings.findChildViewById(rootView, id);
-      if (btnSpotlight == null) {
-        break missingId;
-      }
-
-      id = R.id.btnStylusAction;
-      ImageButton btnStylusAction = ViewBindings.findChildViewById(rootView, id);
-      if (btnStylusAction == null) {
         break missingId;
       }
 
@@ -329,20 +148,14 @@ public final class LayoutToolbarBinding implements ViewBinding {
       }
 
       id = R.id.dragHandle;
-      LinearLayout dragHandle = ViewBindings.findChildViewById(rootView, id);
+      View dragHandle = ViewBindings.findChildViewById(rootView, id);
       if (dragHandle == null) {
         break missingId;
       }
 
-      id = R.id.opacitySlider;
-      Slider opacitySlider = ViewBindings.findChildViewById(rootView, id);
-      if (opacitySlider == null) {
-        break missingId;
-      }
-
-      id = R.id.shapesDivider;
-      View shapesDivider = ViewBindings.findChildViewById(rootView, id);
-      if (shapesDivider == null) {
+      id = R.id.expandableMenu;
+      LinearLayout expandableMenu = ViewBindings.findChildViewById(rootView, id);
+      if (expandableMenu == null) {
         break missingId;
       }
 
@@ -354,17 +167,15 @@ public final class LayoutToolbarBinding implements ViewBinding {
 
       LinearLayout toolbarRoot = (LinearLayout) rootView;
 
-      id = R.id.toolsContainer;
-      LinearLayout toolsContainer = ViewBindings.findChildViewById(rootView, id);
-      if (toolsContainer == null) {
+      id = R.id.toolsGrid;
+      GridLayout toolsGrid = ViewBindings.findChildViewById(rootView, id);
+      if (toolsGrid == null) {
         break missingId;
       }
 
-      return new LayoutToolbarBinding((LinearLayout) rootView, btnArrow, btnBrush, btnCalligraphy,
-          btnCircle, btnClear, btnClose, btnCollapse, btnEraser, btnFountain, btnLaser, btnLine,
-          btnMarker, btnPassThrough, btnPen, btnPencil, btnRect, btnRedo, btnRuler, btnScreenshot,
-          btnSpotlight, btnStylusAction, btnToolSelect, btnUndo, colorContainer, dragHandle,
-          opacitySlider, shapesDivider, strokeSlider, toolbarRoot, toolsContainer);
+      return new LayoutToolbarBinding((LinearLayout) rootView, btnClear, btnClose, btnEraser,
+          btnPen, btnToolSelect, btnUndo, colorContainer, dragHandle, expandableMenu, strokeSlider,
+          toolbarRoot, toolsGrid);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
