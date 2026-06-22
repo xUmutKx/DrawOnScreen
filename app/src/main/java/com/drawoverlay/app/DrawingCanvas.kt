@@ -260,7 +260,11 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         canvas.drawRoundRect(0f, 0f, 800f, 150f, 10f, 10f, edgePaint)
         
         // Markings (cm/mm)
-        val markPaint = Paint().apply { color = Color.BLACK; strokeWidth = 1f; textSize = 20sp }
+        val markPaint = Paint().apply { 
+            color = Color.BLACK
+            strokeWidth = 1f
+            textSize = 20f * resources.displayMetrics.scaledDensity 
+        }
         for (i in 0..80) {
             val x = i * 10f
             val h = if (i % 10 == 0) 40f else if (i % 5 == 0) 25f else 15f
@@ -301,8 +305,8 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         c.drawLine(x2,y2,(x2-len*cos(angle+spread)).toFloat(),(y2-len*sin(angle+spread)).toFloat(),p)
     }
 
-    fun undo()  { if (finishedPaths.isNotEmpty()) { undoStack.add(finishedPaths.removeLast()); redrawAll(); invalidate() } }
-    fun redo()  { if (undoStack.isNotEmpty()) { finishedPaths.add(undoStack.removeLast()); redrawAll(); invalidate() } }
+    fun undo()  { if (finishedPaths.isNotEmpty()) { undoStack.add(finishedPaths.removeAt(finishedPaths.lastIndex)); redrawAll(); invalidate() } }
+    fun redo()  { if (undoStack.isNotEmpty()) { finishedPaths.add(undoStack.removeAt(undoStack.lastIndex)); redrawAll(); invalidate() } }
     fun clearAll() { finishedPaths.clear(); undoStack.clear(); laserPaths.clear(); bitmapCanvas?.drawColor(Color.TRANSPARENT,PorterDuff.Mode.CLEAR); invalidate() }
     fun getBitmap(): Bitmap? = canvasBitmap
     fun overlayBitmap(bmp: Bitmap) { bitmapCanvas?.drawBitmap(bmp,0f,0f,null); invalidate() }
