@@ -37,7 +37,7 @@ class FloatingToolbar(
     val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
         PixelFormat.TRANSLUCENT
     ).apply {
         gravity = if (prefs.toolbarSide) Gravity.TOP or Gravity.END else Gravity.TOP or Gravity.START
@@ -86,7 +86,6 @@ class FloatingToolbar(
         vis(R.id.btnCalligraphy, prefs.showCalligraphy)
         vis(R.id.btnPencil, prefs.showPencil)
         
-        // Compact mode: hide some redundant buttons
         root.findViewById<View>(R.id.btnBrush)?.visibility = View.GONE
         root.findViewById<View>(R.id.btnMarker)?.visibility = View.GONE
 
@@ -244,32 +243,38 @@ class FloatingToolbar(
         val menuParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            // Position relative to screen, accounting for current toolbar position
+            
             val toolbarBounds = IntArray(2)
             root.getLocationOnScreen(toolbarBounds)
             
             if (prefs.toolbarSide) {
-                // Toolbar is on right. Show menu to the left of it.
                 x = toolbarBounds[0] - (230 * context.resources.displayMetrics.density).toInt()
             } else {
-                // Toolbar is on left. Show menu to the right of it.
                 x = toolbarBounds[0] + root.width
             }
             y = toolbarBounds[1]
+            
+            // ENSURE IT'S ON SCREEN
+            if (x < 0) x = 0
         }
         
         try {
             wm.addView(menu, menuParams)
             toolsMenu = menu
+            
+            // CLICK OUTSIDE TO CLOSE
             menu.setOnTouchListener { _, event ->
-                if (event.action == MotionEvent.ACTION_OUTSIDE) { hideToolMenu(); true } else false
+                if (event.action == MotionEvent.ACTION_OUTSIDE) {
+                    hideToolMenu()
+                    true
+                } else false
             }
-        } catch (_: Exception) {
-            Toast.makeText(context, "Menu failed to show", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Menu error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
