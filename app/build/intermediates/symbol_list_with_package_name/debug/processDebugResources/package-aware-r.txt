@@ -3043,7 +3043,13 @@ drawable ic_fountain
 drawable ic_keyboard_black_24dp
 drawable ic_laser
 drawable ic_launcher_bg
+drawable ic_launcher_blue_wrap
 drawable ic_launcher_fg
+drawable ic_launcher_fg_blue
+drawable ic_launcher_fg_green
+drawable ic_launcher_fg_red
+drawable ic_launcher_green_wrap
+drawable ic_launcher_red_wrap
 drawable ic_line
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
@@ -3289,6 +3295,7 @@ id clockwise
 id closest
 id collapseActionView
 id colorContainer
+id colorPreview
 id compress
 id confirm_button
 id constraint
@@ -3385,6 +3392,10 @@ id homeAsUp
 id honorRequest
 id horizontal_only
 id icon
+id iconBlue
+id iconDefault
+id iconGreen
+id iconRed
 id icon_group
 id ifRoom
 id ignore

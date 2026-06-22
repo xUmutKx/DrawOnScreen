@@ -90,12 +90,12 @@ class FloatingToolbar(
         root.findViewById<View>(R.id.btnBrush)?.visibility = View.GONE
         root.findViewById<View>(R.id.btnMarker)?.visibility = View.GONE
 
-        val currentTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
-        canvas.currentTool = currentTool
+        val defaultTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
+        canvas.currentTool = defaultTool
         canvas.strokeWidth = prefs.defaultStroke
         canvas.currentColor = prefs.defaultColor
         
-        val id = getToolButtonId(currentTool)
+        val id = getToolButtonId(defaultTool)
         if (id != 0) updateToolHighlight(id)
     }
 
@@ -104,9 +104,6 @@ class FloatingToolbar(
             DrawingTool.PEN -> R.id.btnPen
             DrawingTool.PENCIL -> R.id.btnPencil
             DrawingTool.FOUNTAIN -> R.id.btnFountain
-            DrawingTool.BRUSH -> R.id.btnBrush
-            DrawingTool.CALLIGRAPHY -> R.id.btnCalligraphy
-            DrawingTool.MARKER -> R.id.btnMarker
             DrawingTool.ERASER -> R.id.btnEraser
             DrawingTool.LINE -> R.id.btnLine
             DrawingTool.RECTANGLE -> R.id.btnRect
@@ -247,12 +244,22 @@ class FloatingToolbar(
         val menuParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply {
-            gravity = params.gravity
-            x = params.x + root.width
-            y = params.y
+            gravity = Gravity.TOP or Gravity.START
+            // Position relative to screen, accounting for current toolbar position
+            val toolbarBounds = IntArray(2)
+            root.getLocationOnScreen(toolbarBounds)
+            
+            if (prefs.toolbarSide) {
+                // Toolbar is on right. Show menu to the left of it.
+                x = toolbarBounds[0] - (230 * context.resources.displayMetrics.density).toInt()
+            } else {
+                // Toolbar is on left. Show menu to the right of it.
+                x = toolbarBounds[0] + root.width
+            }
+            y = toolbarBounds[1]
         }
         
         try {
@@ -261,7 +268,9 @@ class FloatingToolbar(
             menu.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_OUTSIDE) { hideToolMenu(); true } else false
             }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+            Toast.makeText(context, "Menu failed to show", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun hideToolMenu() {
@@ -277,10 +286,10 @@ class FloatingToolbar(
             DrawingTool.BRUSH -> R.drawable.ic_brush
             DrawingTool.CALLIGRAPHY -> R.drawable.ic_calligraphy
             DrawingTool.MARKER -> R.drawable.ic_marker
-            DrawingTool.CRAYON -> R.drawable.ic_pen // Need crayon icon, using pen for now
-            DrawingTool.GLOW -> R.drawable.ic_laser // Need glow icon
-            DrawingTool.AIRBRUSH -> R.drawable.ic_brush // Need airbrush icon
-            DrawingTool.CHARCOAL -> R.drawable.ic_pencil // Need charcoal icon
+            DrawingTool.CRAYON -> R.drawable.ic_pen
+            DrawingTool.GLOW -> R.drawable.ic_laser
+            DrawingTool.AIRBRUSH -> R.drawable.ic_brush
+            DrawingTool.CHARCOAL -> R.drawable.ic_pencil
             DrawingTool.ERASER -> R.drawable.ic_eraser
             DrawingTool.LINE -> R.drawable.ic_line
             DrawingTool.RECTANGLE -> R.drawable.ic_rect

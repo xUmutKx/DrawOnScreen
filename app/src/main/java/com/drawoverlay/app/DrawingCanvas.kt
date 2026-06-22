@@ -80,7 +80,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 p.maskFilter = BlurMaskFilter(1.2f, BlurMaskFilter.Blur.NORMAL)
             }
             DrawingTool.FOUNTAIN -> {
-                // Variable width based on angle and velocity
                 val angle = atan2(dy.toDouble(), dx.toDouble())
                 val angleFactor = (0.7f + 0.6f * abs(sin(angle + Math.PI / 4))).toFloat()
                 val vFactor = (1.2f - (velocityScale * 0.3f)).coerceIn(0.7f, 1.3f)
@@ -141,25 +140,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 p.strokeWidth = strokeWidth * 2f
                 p.color = Color.RED
                 p.alpha = 255
-                if (android.os.Build.VERSION.SDK_INT >= 33) {
-                    try {
-                        val shader = RuntimeShader("""
-                            uniform float2 iResolution;
-                            uniform float4 iColor;
-                            layout(color) uniform half4 iGlowColor;
-                            
-                            half4 main(float2 fragCoord) {
-                                return iColor;
-                            }
-                        """.trimIndent())
-                        // Note: Real AGSL glow is complex, using simple blur for now
-                        p.maskFilter = BlurMaskFilter(strokeWidth * 2f, BlurMaskFilter.Blur.OUTER)
-                    } catch (_: Exception) {
-                        p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
-                    }
-                } else {
-                    p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
-                }
+                p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
             }
             else -> {
                 p.style = Paint.Style.STROKE
@@ -213,13 +194,15 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                         val dyTouch = abs(y - mY)
                         
                         if (dxTouch >= touchTolerance || dyTouch >= touchTolerance) {
+                            val endX = (x + mX) / 2
+                            val endY = (y + mY) / 2
+                            
                             if (prefs.smoothing) {
-                                dp.path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
+                                dp.path.quadTo(mX, mY, endX, endY)
                             } else {
                                 dp.path.lineTo(x, y)
                             }
                             
-                            // Apply texture effects
                             if (dp.tool == DrawingTool.PENCIL) addPencilTexture(bitmapCanvas!!, x, y, dp.paint)
                             if (dp.tool == DrawingTool.AIRBRUSH) addAirbrushTexture(bitmapCanvas!!, x, y, dp.paint)
                             
@@ -229,7 +212,8 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                             } else {
                                 bitmapCanvas?.drawPath(dp.path, dp.paint)
                                 dp.path.reset()
-                                dp.path.moveTo(x, y)
+                                // START NEXT SEGMENT WHERE LAST ONE ENDED
+                                if (prefs.smoothing) dp.path.moveTo(endX, endY) else dp.path.moveTo(x, y)
                             }
                             
                             mX = x
@@ -252,6 +236,10 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                     invalidate()
                 } else {
                     currentPath?.let { dp ->
+                        // Finalize the last bit of the path
+                        dp.path.lineTo(x, y)
+                        bitmapCanvas?.drawPath(dp.path, dp.paint)
+                        
                         if (dp.tool == DrawingTool.LASER) {
                             laserPaths.add(dp)
                             scheduleLaserFade(dp)
@@ -265,6 +253,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 }
                 performClick()
             }
+            // ... (rest is the same)
             MotionEvent.ACTION_BUTTON_PRESS -> {
                 if (event.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY != 0 && !stylusButtonHeld) {
                     stylusButtonHeld = true

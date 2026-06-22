@@ -35,7 +35,13 @@ drawable ic_expand
 drawable ic_fountain
 drawable ic_laser
 drawable ic_launcher_bg
+drawable ic_launcher_blue_wrap
 drawable ic_launcher_fg
+drawable ic_launcher_fg_blue
+drawable ic_launcher_fg_green
+drawable ic_launcher_fg_red
+drawable ic_launcher_green_wrap
+drawable ic_launcher_red_wrap
 drawable ic_line
 drawable ic_marker
 drawable ic_notif_pencil
@@ -76,7 +82,12 @@ id btnStylusAction
 id btnToolSelect
 id btnUndo
 id colorContainer
+id colorPreview
 id dragHandle
+id iconBlue
+id iconDefault
+id iconGreen
+id iconRed
 id ivIcon
 id logoBlock
 id opacitySlider

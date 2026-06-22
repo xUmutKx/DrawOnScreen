@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.drawoverlay.app.R;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -19,6 +20,21 @@ import java.lang.String;
 public final class ActivitySettingsBinding implements ViewBinding {
   @NonNull
   private final LinearLayout rootView;
+
+  @NonNull
+  public final View colorPreview;
+
+  @NonNull
+  public final MaterialCardView iconBlue;
+
+  @NonNull
+  public final MaterialCardView iconDefault;
+
+  @NonNull
+  public final MaterialCardView iconGreen;
+
+  @NonNull
+  public final MaterialCardView iconRed;
 
   @NonNull
   public final LinearLayout rowResetAll;
@@ -86,19 +102,26 @@ public final class ActivitySettingsBinding implements ViewBinding {
   @NonNull
   public final MaterialToolbar toolbar;
 
-  private ActivitySettingsBinding(@NonNull LinearLayout rootView, @NonNull LinearLayout rowResetAll,
-      @NonNull MaterialSwitch switchFingerDraw, @NonNull MaterialSwitch switchHwAcceleration,
-      @NonNull MaterialSwitch switchInkBleeding, @NonNull MaterialSwitch switchKeepScreenOn,
-      @NonNull MaterialSwitch switchMinimalUi, @NonNull MaterialSwitch switchMinimizeOnDraw,
-      @NonNull MaterialSwitch switchPressure, @NonNull MaterialSwitch switchShowCalligraphy,
-      @NonNull MaterialSwitch switchShowEraser, @NonNull MaterialSwitch switchShowFountain,
-      @NonNull MaterialSwitch switchShowLaser, @NonNull MaterialSwitch switchShowPencil,
-      @NonNull MaterialSwitch switchShowRedo, @NonNull MaterialSwitch switchShowRuler,
-      @NonNull MaterialSwitch switchShowShapes, @NonNull MaterialSwitch switchShowSpotlight,
-      @NonNull MaterialSwitch switchShowUndo, @NonNull MaterialSwitch switchSmoothing,
-      @NonNull MaterialSwitch switchStylusOnly, @NonNull MaterialSwitch switchToolbarRight,
-      @NonNull MaterialToolbar toolbar) {
+  private ActivitySettingsBinding(@NonNull LinearLayout rootView, @NonNull View colorPreview,
+      @NonNull MaterialCardView iconBlue, @NonNull MaterialCardView iconDefault,
+      @NonNull MaterialCardView iconGreen, @NonNull MaterialCardView iconRed,
+      @NonNull LinearLayout rowResetAll, @NonNull MaterialSwitch switchFingerDraw,
+      @NonNull MaterialSwitch switchHwAcceleration, @NonNull MaterialSwitch switchInkBleeding,
+      @NonNull MaterialSwitch switchKeepScreenOn, @NonNull MaterialSwitch switchMinimalUi,
+      @NonNull MaterialSwitch switchMinimizeOnDraw, @NonNull MaterialSwitch switchPressure,
+      @NonNull MaterialSwitch switchShowCalligraphy, @NonNull MaterialSwitch switchShowEraser,
+      @NonNull MaterialSwitch switchShowFountain, @NonNull MaterialSwitch switchShowLaser,
+      @NonNull MaterialSwitch switchShowPencil, @NonNull MaterialSwitch switchShowRedo,
+      @NonNull MaterialSwitch switchShowRuler, @NonNull MaterialSwitch switchShowShapes,
+      @NonNull MaterialSwitch switchShowSpotlight, @NonNull MaterialSwitch switchShowUndo,
+      @NonNull MaterialSwitch switchSmoothing, @NonNull MaterialSwitch switchStylusOnly,
+      @NonNull MaterialSwitch switchToolbarRight, @NonNull MaterialToolbar toolbar) {
     this.rootView = rootView;
+    this.colorPreview = colorPreview;
+    this.iconBlue = iconBlue;
+    this.iconDefault = iconDefault;
+    this.iconGreen = iconGreen;
+    this.iconRed = iconRed;
     this.rowResetAll = rowResetAll;
     this.switchFingerDraw = switchFingerDraw;
     this.switchHwAcceleration = switchHwAcceleration;
@@ -150,6 +173,36 @@ public final class ActivitySettingsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.colorPreview;
+      View colorPreview = ViewBindings.findChildViewById(rootView, id);
+      if (colorPreview == null) {
+        break missingId;
+      }
+
+      id = R.id.iconBlue;
+      MaterialCardView iconBlue = ViewBindings.findChildViewById(rootView, id);
+      if (iconBlue == null) {
+        break missingId;
+      }
+
+      id = R.id.iconDefault;
+      MaterialCardView iconDefault = ViewBindings.findChildViewById(rootView, id);
+      if (iconDefault == null) {
+        break missingId;
+      }
+
+      id = R.id.iconGreen;
+      MaterialCardView iconGreen = ViewBindings.findChildViewById(rootView, id);
+      if (iconGreen == null) {
+        break missingId;
+      }
+
+      id = R.id.iconRed;
+      MaterialCardView iconRed = ViewBindings.findChildViewById(rootView, id);
+      if (iconRed == null) {
+        break missingId;
+      }
+
       id = R.id.rowResetAll;
       LinearLayout rowResetAll = ViewBindings.findChildViewById(rootView, id);
       if (rowResetAll == null) {
@@ -282,11 +335,12 @@ public final class ActivitySettingsBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivitySettingsBinding((LinearLayout) rootView, rowResetAll, switchFingerDraw,
-          switchHwAcceleration, switchInkBleeding, switchKeepScreenOn, switchMinimalUi,
-          switchMinimizeOnDraw, switchPressure, switchShowCalligraphy, switchShowEraser,
-          switchShowFountain, switchShowLaser, switchShowPencil, switchShowRedo, switchShowRuler,
-          switchShowShapes, switchShowSpotlight, switchShowUndo, switchSmoothing, switchStylusOnly,
+      return new ActivitySettingsBinding((LinearLayout) rootView, colorPreview, iconBlue,
+          iconDefault, iconGreen, iconRed, rowResetAll, switchFingerDraw, switchHwAcceleration,
+          switchInkBleeding, switchKeepScreenOn, switchMinimalUi, switchMinimizeOnDraw,
+          switchPressure, switchShowCalligraphy, switchShowEraser, switchShowFountain,
+          switchShowLaser, switchShowPencil, switchShowRedo, switchShowRuler, switchShowShapes,
+          switchShowSpotlight, switchShowUndo, switchSmoothing, switchStylusOnly,
           switchToolbarRight, toolbar);
     }
     String missingId = rootView.getResources().getResourceName(id);

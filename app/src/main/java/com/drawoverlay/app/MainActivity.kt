@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.drawoverlay.app.databinding.ActivityMainBinding
@@ -52,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+        
+        Toast.makeText(this, "Ready. Tap Start to Draw!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
@@ -80,8 +83,9 @@ class MainActivity : AppCompatActivity() {
             if (prefs.minimizeOnDraw) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     try { moveTaskToBack(true) } catch (_: Exception) {}
-                }, 500)
+                }, 1000)
             }
+            Toast.makeText(this, "Drawing Layer Active", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Snackbar.make(binding.root, "Failed to start: ${e.message}", Snackbar.LENGTH_LONG).show()
         }
