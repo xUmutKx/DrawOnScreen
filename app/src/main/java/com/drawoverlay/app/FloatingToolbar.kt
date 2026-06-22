@@ -17,7 +17,7 @@ class FloatingToolbar(
     private val onScreenshot: () -> Unit
 ) {
     private val root: View = LayoutInflater.from(context).inflate(R.layout.layout_toolbar, null)
-    private var pickerOverlay: View? = null
+    private var isMenuVisible = false
 
     val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
@@ -35,6 +35,8 @@ class FloatingToolbar(
     init {
         setupDrag()
         setupButtons()
+        setupToolsGrid()
+        setupColorPalette()
         applyPrefs()
     }
 
@@ -43,7 +45,7 @@ class FloatingToolbar(
         canvas.currentTool = defaultTool
         canvas.strokeWidth = prefs.defaultStroke
         canvas.currentColor = prefs.defaultColor
-        updateToolIcon()
+        updateToolHighlight(getToolButtonId(defaultTool))
     }
 
     private fun setupDrag() {
@@ -57,6 +59,7 @@ class FloatingToolbar(
                     params.x = (winStartX + (ev.rawX - dragStartX)).toInt()
                     params.y = (winStartY + (ev.rawY - dragStartY)).toInt()
                     try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
+                    if (isMenuVisible) hideMenu()
                 }
                 MotionEvent.ACTION_UP -> v.performClick()
             }
@@ -66,22 +69,53 @@ class FloatingToolbar(
 
     private fun setupButtons() {
         root.findViewById<ImageButton>(R.id.btnToolSelect)?.setOnClickListener {
-            showToolPicker()
+            toggleMenu()
         }
+
+        root.findViewById<ImageButton>(R.id.btnPen)?.setOnClickListener { 
+            selectTool(DrawingTool.PEN, R.id.btnPen)
+        }
+
         root.findViewById<ImageButton>(R.id.btnEraser)?.setOnClickListener { 
-            canvas.currentTool = DrawingTool.ERASER
-            updateToolIcon()
+            selectTool(DrawingTool.ERASER, R.id.btnEraser)
         }
+
         root.findViewById<ImageButton>(R.id.btnUndo)?.setOnClickListener { canvas.undo() }
-        root.findViewById<ImageButton>(R.id.btnClear)?.setOnClickListener { canvas.clearAll() }
+        root.findViewById<ImageButton>(R.id.btnClear)?.setOnClickListener { 
+            canvas.clearAll() 
+            if (isMenuVisible) hideMenu()
+        }
         root.findViewById<ImageButton>(R.id.btnClose)?.setOnClickListener { onClose() }
+
+        root.findViewById<Slider>(R.id.strokeSlider)?.apply {
+            value = prefs.defaultStroke.coerceIn(2f, 80f)
+            addOnChangeListener { _, v, _ -> canvas.strokeWidth = v }
+        }
     }
 
-    private fun showToolPicker() {
-        if (pickerOverlay != null) return
+    private fun toggleMenu() {
+        isMenuVisible = !isMenuVisible
+        val sidePanel = root.findViewById<View>(R.id.sidePanel)
+        sidePanel.visibility = if (isMenuVisible) View.VISIBLE else View.GONE
+        
+        root.findViewById<ImageButton>(R.id.btnToolSelect).setImageResource(
+            if (isMenuVisible) R.drawable.ic_collapse else R.drawable.ic_expand
+        )
+        
+        // Update layout to account for expanded size
+        try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
+    }
 
-        val picker = LayoutInflater.from(context).inflate(R.layout.layout_tool_picker, null)
-        val grid = picker.findViewById<GridLayout>(R.id.toolsGrid)
+    private fun hideMenu() {
+        isMenuVisible = false
+        root.findViewById<View>(R.id.sidePanel).visibility = View.GONE
+        root.findViewById<ImageButton>(R.id.btnToolSelect).setImageResource(R.drawable.ic_expand)
+        try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
+    }
+
+    private fun setupToolsGrid() {
+        val grid = root.findViewById<GridLayout>(R.id.toolsGrid)
+        grid.removeAllViews()
         
         DrawingTool.entries.forEach { tool ->
             val btn = ImageButton(context).apply {
@@ -93,64 +127,50 @@ class FloatingToolbar(
                 setImageResource(getIconForTool(tool))
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
                 setPadding(12, 12, 12, 12)
-                setColorFilter(if (canvas.currentTool == tool) Color.YELLOW else Color.WHITE)
+                setColorFilter(Color.WHITE)
                 setOnClickListener { 
-                    canvas.currentTool = tool
-                    updateToolIcon()
-                    hideToolPicker()
+                    selectTool(tool, 0)
+                    hideMenu()
                 }
             }
             grid.addView(btn)
         }
+    }
 
-        picker.findViewById<Slider>(R.id.strokeSliderPicker)?.apply {
-            value = canvas.strokeWidth.coerceIn(2f, 100f)
-            addOnChangeListener { _, v, _ -> canvas.strokeWidth = v }
-        }
-
-        val colors = listOf(Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA)
-        val colorCont = picker.findViewById<LinearLayout>(R.id.colorContainerPicker)
+    private fun setupColorPalette() {
+        val container = root.findViewById<LinearLayout>(R.id.colorContainer) ?: return
+        val colors = listOf(Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW)
+        container.removeAllViews()
         colors.forEach { color ->
             val btn = View(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     (32 * context.resources.displayMetrics.density).toInt(),
                     (32 * context.resources.displayMetrics.density).toInt()
-                ).apply { setMargins(6, 0, 6, 0) }
+                ).apply { setMargins(4, 0, 4, 0) }
                 background = GradientDrawable().apply {
                     shape = GradientDrawable.OVAL
                     setColor(color)
-                    setStroke(2, if (canvas.currentColor == color) Color.YELLOW else Color.LTGRAY)
+                    setStroke(2, Color.LTGRAY)
                 }
                 setOnClickListener { 
                     canvas.currentColor = color
-                    hideToolPicker()
+                    hideMenu()
                 }
             }
-            colorCont.addView(btn)
+            container.addView(btn)
         }
-
-        val pickerParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-            PixelFormat.TRANSLUCENT
-        )
-
-        picker.findViewById<View>(R.id.pickerContainer).setOnClickListener { hideToolPicker() }
-
-        try {
-            wm.addView(picker, pickerParams)
-            pickerOverlay = picker
-        } catch (_: Exception) {}
     }
 
-    private fun hideToolPicker() {
-        pickerOverlay?.let { try { wm.removeView(it) } catch (_: Exception) {} }
-        pickerOverlay = null
+    private fun selectTool(tool: DrawingTool, btnId: Int) {
+        canvas.currentTool = tool
+        updateToolHighlight(btnId)
     }
 
-    private fun updateToolIcon() {
-        root.findViewById<ImageButton>(R.id.btnToolSelect)?.setImageResource(getIconForTool(canvas.currentTool))
+    private fun updateToolHighlight(selectedId: Int) {
+        val mainIds = listOf(R.id.btnPen, R.id.btnEraser)
+        mainIds.forEach { id -> 
+            root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.4f 
+        }
     }
 
     private fun getIconForTool(tool: DrawingTool): Int {
@@ -172,6 +192,14 @@ class FloatingToolbar(
             DrawingTool.ARROW -> R.drawable.ic_arrow
             DrawingTool.LASER -> R.drawable.ic_laser
             else -> R.drawable.ic_expand
+        }
+    }
+
+    private fun getToolButtonId(tool: DrawingTool): Int {
+        return when (tool) {
+            DrawingTool.PEN -> R.id.btnPen
+            DrawingTool.ERASER -> R.id.btnEraser
+            else -> 0
         }
     }
 

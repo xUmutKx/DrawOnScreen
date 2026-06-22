@@ -1,33 +1,25 @@
-# Draw On Screen v4.0
+# Drawly Pro v5.0
 
-Ekran üzerine çizim uygulaması. Hem **parmak** hem **stylus** ile çalışır.
+A high-performance, professional screen overlay drawing application for Android. Designed for educators, presenters, and digital artists who need to annotate "anywhere" on the system.
 
-## Düzeltilen Sorunlar (v4.0)
-- ✅ Android 14+ crash fix: `startForeground` hemen çağrılıyor
-- ✅ Settings açılmıyor crash düzeltildi
-- ✅ Overlay ekranda görünmüyor sorunu düzeltildi
-- ✅ Parmakla çizim artık varsayılan olarak aktif (stylus zorunlu değil)
-- ✅ Logo artık tam ortada
-- ✅ AMOLED siyah tema (#000000 arka plan)
-- ✅ Launcher ikonu ince kalem
+## 🚀 Key Features
+- **Draw Anywhere**: Transparent overlay layer allows you to draw over any app, game, or the home screen.
+- **Professional Brush Engine**: High-fidelity pens including **Fountain Pen** (dynamic width based on velocity/angle), **Calligraphy**, **Crayon**, **Charcoal**, and **Airbrush**.
+- **Material You Design**: Fully compliant with Material 3 standards, including support for **Dynamic Coloring** (Wallpaper-based colors) and Dark Mode.
+- **Smart Tools**: Integrated **Textured Ruler** and **Spotlight** tool for focused presentations.
+- **S-Pen Optimized**: Advanced palm rejection and pressure sensitivity for Samsung S-Pen and generic styluses.
+- **Privacy Focused**: No data collection. Works entirely offline.
 
-## Yeni Özellikler
-- Araç çubuğunu sağa/sola taşıma ayarı
-- Çizgi düzleştirme (Smoothing) ayarı
-- Basınç hassasiyeti ayarı
-- Titreşim API düzeltmesi (Android 12+)
-- try-catch ile sağlam hata yönetimi
+## 🛠 Fixes & Improvements
+- ✅ **Bézier Smoothing**: No more jittery or "dot-dot" lines. Strokes are fluid and continuous.
+- ✅ **AMOLED Optimized**: Deep black (#000000) interface for battery efficiency and high contrast.
+- ✅ **Dynamic Toolbar**: Robust, expandable toolbar that anchors perfectly to screen edges.
+- ✅ **Custom Launcher Icons**: Choose from multiple minimalist icon variants in settings.
 
-## Termux Build
-```bash
-cd DrawOnScreen_new
-./gradlew assembleDebug
-# APK: app/build/outputs/apk/debug/app-debug.apk
-```
+## 📱 Installation
+1. Enable "Display over other apps" permission.
+2. Tap "Start Drawing" from the dashboard.
+3. Use the floating toolbar to switch tools and colors.
 
-## GitHub Push
-```bash
-git add -A
-git commit -m "v4.0: crash fixes, AMOLED theme, finger draw fix"
-git push origin main
-```
+## 🏗 Developer
+Built with Kotlin, Material 3, and low-latency Native Canvas APIs.

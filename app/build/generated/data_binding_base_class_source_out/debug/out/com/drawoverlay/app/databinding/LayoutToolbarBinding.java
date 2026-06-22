@@ -4,7 +4,6 @@ package com.drawoverlay.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
@@ -12,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.drawoverlay.app.R;
-import com.google.android.material.slider.Slider;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -31,51 +29,29 @@ public final class LayoutToolbarBinding implements ViewBinding {
   public final ImageButton btnEraser;
 
   @NonNull
-  public final ImageButton btnPen;
-
-  @NonNull
   public final ImageButton btnToolSelect;
 
   @NonNull
   public final ImageButton btnUndo;
 
   @NonNull
-  public final LinearLayout colorContainer;
-
-  @NonNull
   public final View dragHandle;
-
-  @NonNull
-  public final LinearLayout expandableMenu;
-
-  @NonNull
-  public final Slider strokeSlider;
 
   @NonNull
   public final LinearLayout toolbarRoot;
 
-  @NonNull
-  public final GridLayout toolsGrid;
-
   private LayoutToolbarBinding(@NonNull LinearLayout rootView, @NonNull ImageButton btnClear,
-      @NonNull ImageButton btnClose, @NonNull ImageButton btnEraser, @NonNull ImageButton btnPen,
-      @NonNull ImageButton btnToolSelect, @NonNull ImageButton btnUndo,
-      @NonNull LinearLayout colorContainer, @NonNull View dragHandle,
-      @NonNull LinearLayout expandableMenu, @NonNull Slider strokeSlider,
-      @NonNull LinearLayout toolbarRoot, @NonNull GridLayout toolsGrid) {
+      @NonNull ImageButton btnClose, @NonNull ImageButton btnEraser,
+      @NonNull ImageButton btnToolSelect, @NonNull ImageButton btnUndo, @NonNull View dragHandle,
+      @NonNull LinearLayout toolbarRoot) {
     this.rootView = rootView;
     this.btnClear = btnClear;
     this.btnClose = btnClose;
     this.btnEraser = btnEraser;
-    this.btnPen = btnPen;
     this.btnToolSelect = btnToolSelect;
     this.btnUndo = btnUndo;
-    this.colorContainer = colorContainer;
     this.dragHandle = dragHandle;
-    this.expandableMenu = expandableMenu;
-    this.strokeSlider = strokeSlider;
     this.toolbarRoot = toolbarRoot;
-    this.toolsGrid = toolsGrid;
   }
 
   @Override
@@ -123,12 +99,6 @@ public final class LayoutToolbarBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.btnPen;
-      ImageButton btnPen = ViewBindings.findChildViewById(rootView, id);
-      if (btnPen == null) {
-        break missingId;
-      }
-
       id = R.id.btnToolSelect;
       ImageButton btnToolSelect = ViewBindings.findChildViewById(rootView, id);
       if (btnToolSelect == null) {
@@ -141,41 +111,16 @@ public final class LayoutToolbarBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.colorContainer;
-      LinearLayout colorContainer = ViewBindings.findChildViewById(rootView, id);
-      if (colorContainer == null) {
-        break missingId;
-      }
-
       id = R.id.dragHandle;
       View dragHandle = ViewBindings.findChildViewById(rootView, id);
       if (dragHandle == null) {
         break missingId;
       }
 
-      id = R.id.expandableMenu;
-      LinearLayout expandableMenu = ViewBindings.findChildViewById(rootView, id);
-      if (expandableMenu == null) {
-        break missingId;
-      }
-
-      id = R.id.strokeSlider;
-      Slider strokeSlider = ViewBindings.findChildViewById(rootView, id);
-      if (strokeSlider == null) {
-        break missingId;
-      }
-
       LinearLayout toolbarRoot = (LinearLayout) rootView;
 
-      id = R.id.toolsGrid;
-      GridLayout toolsGrid = ViewBindings.findChildViewById(rootView, id);
-      if (toolsGrid == null) {
-        break missingId;
-      }
-
       return new LayoutToolbarBinding((LinearLayout) rootView, btnClear, btnClose, btnEraser,
-          btnPen, btnToolSelect, btnUndo, colorContainer, dragHandle, expandableMenu, strokeSlider,
-          toolbarRoot, toolsGrid);
+          btnToolSelect, btnUndo, dragHandle, toolbarRoot);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

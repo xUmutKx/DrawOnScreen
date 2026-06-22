@@ -3250,7 +3250,6 @@ id btnClear
 id btnClearMenu
 id btnClose
 id btnEraser
-id btnPen
 id btnSettings
 id btnStart
 id btnToolSelect
@@ -3278,7 +3277,7 @@ id clip_vertical
 id clockwise
 id closest
 id collapseActionView
-id colorContainer
+id colorContainerPicker
 id colorPreview
 id compress
 id confirm_button
@@ -3342,7 +3341,6 @@ id enterAlwaysCollapsed
 id escape
 id exitUntilCollapsed
 id expand_activities_button
-id expandableMenu
 id expanded_menu
 id fade
 id fill
@@ -3517,6 +3515,7 @@ id path
 id pathRelative
 id peekHeight
 id percent
+id pickerContainer
 id pin
 id position
 id postLayout
@@ -3593,7 +3592,7 @@ id staticLayout
 id staticPostLayout
 id stop
 id stretch
-id strokeSlider
+id strokeSliderPicker
 id submenuarrow
 id submit_area
 id supportScrollUp
@@ -3832,6 +3831,7 @@ layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout item_setting_switch
 layout item_spinner
+layout layout_tool_picker
 layout layout_toolbar
 layout layout_tools_menu
 layout m3_alert_dialog

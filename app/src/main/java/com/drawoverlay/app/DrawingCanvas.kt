@@ -45,10 +45,9 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
     private var lastY = 0f
     private var lastVelocity = 0f
 
-    // For smoothing (Bézier)
+    // Smoothing state
     private var mX = 0f
     private var mY = 0f
-    private val touchTolerance = 1.5f
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -77,7 +76,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 p.style = Paint.Style.STROKE
                 p.strokeWidth = strokeWidth * pressureScale * 0.8f
                 p.alpha = (opacity * 0.8f * pressureScale).toInt().coerceIn(30, 255)
-                // Reduced blur to prevent "dot" appearance
                 p.maskFilter = BlurMaskFilter(0.8f, BlurMaskFilter.Blur.NORMAL)
             }
             DrawingTool.FOUNTAIN -> {
@@ -133,7 +131,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
             }
             DrawingTool.ERASER -> {
                 p.style = Paint.Style.STROKE
-                p.strokeWidth = strokeWidth * 6f // Larger eraser
+                p.strokeWidth = strokeWidth * 6f
                 p.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
             }
             DrawingTool.LASER -> {
@@ -153,8 +151,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val toolType = event.getToolType(0)
-        
-        // ROBUST STYLUS DETECTION (S-Pen can be STYLUS or ERASER)
         val isStylus = toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER
         val isFinger = toolType == MotionEvent.TOOL_TYPE_FINGER
 
@@ -165,9 +161,9 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         val y = event.y
         val pressure = if (isStylus && prefs.pressureSensitive) event.getPressure(0).coerceIn(0.1f, 1.0f) else 1f
         
-        val dx = x - lastX
-        val dy = y - lastY
-        val dist = sqrt(dx * dx + dy * dy)
+        val dxVelocity = x - lastX
+        val dyVelocity = y - lastY
+        val dist = sqrt(dxVelocity * dxVelocity + dyVelocity * dyVelocity)
         lastVelocity = (dist * 0.3f + lastVelocity * 0.7f).coerceIn(0f, 50f)
         val vScale = (lastVelocity / 50f)
 
@@ -176,6 +172,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 lastX = x; lastY = y
+                mX = x; mY = y
                 if (isShape) {
                     previewStart.set(x, y)
                     previewEnd.set(x, y)
@@ -185,50 +182,25 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                     val dp = DrawingPath(tool = currentTool)
                     dp.paint.set(buildPaint(pressureScale = pressure, velocityScale = vScale, dx = 0f, dy = 0f))
                     dp.path.moveTo(x, y)
-                    mX = x
-                    mY = y
                     currentPath = dp
                 }
             }
             MotionEvent.ACTION_MOVE -> {
                 if (isShape && isDrawingShape) {
                     previewEnd.set(x, y)
-                    invalidate()
                 } else {
                     currentPath?.let { dp ->
-                        val dxTouch = abs(x - mX)
-                        val dyTouch = abs(y - mY)
-                        
-                        if (dxTouch >= touchTolerance || dyTouch >= touchTolerance) {
-                            val endX = (x + mX) / 2
-                            val endY = (y + mY) / 2
-                            
-                            if (prefs.smoothing) {
-                                dp.path.quadTo(mX, mY, endX, endY)
-                            } else {
-                                dp.path.lineTo(x, y)
-                            }
-                            
-                            if (dp.tool == DrawingTool.PENCIL) addPencilTexture(bitmapCanvas!!, x, y, dp.paint)
-                            if (dp.tool == DrawingTool.AIRBRUSH) addAirbrushTexture(bitmapCanvas!!, x, y, dp.paint)
-                            
-                            if (dp.tool == DrawingTool.FOUNTAIN) {
-                                val p = buildPaint(dp.tool, pressure, vScale, x - mX, y - mY)
-                                bitmapCanvas?.drawLine(mX, mY, x, y, p)
-                            } else {
-                                bitmapCanvas?.drawPath(dp.path, dp.paint)
-                                dp.path.reset()
-                                if (prefs.smoothing) dp.path.moveTo(endX, endY) else dp.path.moveTo(x, y)
-                            }
-                            
-                            mX = x
-                            mY = y
-                            invalidate()
+                        // DRAW ALL HISTORICAL POINTS FOR SMOOTHNESS
+                        for (i in 0 until event.historySize) {
+                            val hx = event.getHistoricalX(i)
+                            val hy = event.getHistoricalY(i)
+                            processPoint(dp, hx, hy, pressure, vScale)
                         }
+                        processPoint(dp, x, y, pressure, vScale)
                     }
                 }
-                lastX = x
-                lastY = y
+                invalidate()
+                lastX = x; lastY = y
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (isShape && isDrawingShape) {
@@ -238,7 +210,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                     drawShapeOnto(bitmapCanvas!!, dp)
                     finishedPaths.add(dp)
                     undoStack.clear()
-                    invalidate()
                 } else {
                     currentPath?.let { dp ->
                         dp.path.lineTo(x, y)
@@ -252,9 +223,9 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                             undoStack.clear()
                         }
                         currentPath = null
-                        invalidate()
                     }
                 }
+                invalidate()
                 performClick()
             }
             MotionEvent.ACTION_BUTTON_PRESS -> {
@@ -276,6 +247,36 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
             }
         }
         return true
+    }
+
+    private fun processPoint(dp: DrawingPath, x: Float, y: Float, pressure: Float, vScale: Float) {
+        val dx = abs(x - mX)
+        val dy = abs(y - mY)
+        
+        if (dx >= 1f || dy >= 1f) {
+            if (prefs.smoothing) {
+                dp.path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2)
+            } else {
+                dp.path.lineTo(x, y)
+            }
+            
+            if (dp.tool == DrawingTool.PENCIL) addPencilTexture(bitmapCanvas!!, x, y, dp.paint)
+            if (dp.tool == DrawingTool.AIRBRUSH) addAirbrushTexture(bitmapCanvas!!, x, y, dp.paint)
+            
+            if (dp.tool == DrawingTool.FOUNTAIN) {
+                val p = buildPaint(dp.tool, pressure, vScale, x - mX, y - mY)
+                bitmapCanvas?.drawLine(mX, mY, x, y, p)
+            } else {
+                bitmapCanvas?.drawPath(dp.path, dp.paint)
+                // IMPORTANT: RESET PATH TO KEEP IT CONTINUOUS AND HIGH PERFORMANCE
+                val lastPathX = if (prefs.smoothing) (x + mX) / 2 else x
+                val lastPathY = if (prefs.smoothing) (y + mY) / 2 else y
+                dp.path.reset()
+                dp.path.moveTo(lastPathX, lastPathY)
+            }
+            mX = x
+            mY = y
+        }
     }
 
     override fun performClick(): Boolean {

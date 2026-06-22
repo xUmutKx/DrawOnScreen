@@ -4,113 +4,50 @@
     android:id="@+id/toolbarRoot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@drawable/bg_toolbar"
-    android:padding="4dp"
+    android:padding="6dp"
     android:elevation="20dp">
 
-    <!-- Primary Vertical Bar (Always Visible) -->
-    <LinearLayout
-        android:layout_width="52dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+    <!-- Drag Handle -->
+    <View
+        android:id="@+id/dragHandle"
+        android:layout_width="32dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 
-        <!-- Drag Handle -->
-        <View
-            android:id="@+id/dragHandle"
-            android:layout_width="32dp"
-            android:layout_height="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+    <!-- Main Active Tool Display/Button -->
+    <ImageButton
+        android:id="@+id/btnToolSelect"
+        style="@style/ToolButton"
+        android:src="@drawable/ic_pen"
+        android:contentDescription="Select Tool"
+        android:background="@drawable/bg_tool_button"
+        app:tint="#FFFFFF"/>
 
-        <ImageButton
-            android:id="@+id/btnToolSelect"
-            style="@style/ToolButton"
-            android:src="@drawable/ic_expand"
-            android:contentDescription="Select Tool"
-            app:tint="#FFFFFF"/>
+    <View android:layout_width="36dp" android:layout_height="1dp"
+        android:background="@color/divider" android:layout_marginVertical="6dp"
+        android:layout_gravity="center_horizontal"/>
 
-        <View android:layout_width="36dp" android:layout_height="1dp"
-            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+    <ImageButton android:id="@+id/btnEraser"
+        style="@style/ToolButton" android:src="@drawable/ic_eraser"
+        app:tint="#FFFFFF"/>
 
-        <ImageButton android:id="@+id/btnPen"
-            style="@style/ToolButton" android:src="@drawable/ic_pen"
-            app:tint="#FFFFFF"/>
+    <ImageButton android:id="@+id/btnUndo"
+        style="@style/ToolButton" android:src="@drawable/ic_undo"
+        app:tint="#FFFFFF"/>
 
-        <ImageButton android:id="@+id/btnEraser"
-            style="@style/ToolButton" android:src="@drawable/ic_eraser"
-            app:tint="#FFFFFF"/>
+    <ImageButton android:id="@+id/btnClear"
+        style="@style/ToolButton" android:src="@drawable/ic_delete"
+        app:tint="#FF5252"/>
 
-        <View android:layout_width="36dp" android:layout_height="1dp"
-            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+    <View android:layout_width="36dp" android:layout_height="1dp"
+        android:background="@color/divider" android:layout_marginVertical="6dp"
+        android:layout_gravity="center_horizontal"/>
 
-        <ImageButton android:id="@+id/btnUndo"
-            style="@style/ToolButton" android:src="@drawable/ic_undo"
-            app:tint="#FFFFFF"/>
-
-        <ImageButton android:id="@+id/btnClear"
-            style="@style/ToolButton" android:src="@drawable/ic_delete"
-            app:tint="#FF5252"/>
-
-        <ImageButton android:id="@+id/btnClose"
-            style="@style/ToolButtonAccent" android:src="@drawable/ic_close"
-            app:tint="#FFFFFF"/>
-    </LinearLayout>
-
-    <!-- Expandable Grid (The "Dropdown") -->
-    <LinearLayout
-        android:id="@+id/expandableMenu"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="All Tools"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-        <GridLayout
-            android:id="@+id/toolsGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:useDefaultMargins="true">
-            <!-- Dynamically populated in code -->
-        </GridLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="1dp"
-            android:background="@color/divider" android:layout_marginVertical="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Size &amp; Opacity"
-            android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:layout_marginBottom="4dp"/>
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/strokeSlider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:valueFrom="2"
-            android:valueTo="80"
-            android:value="8"
-            app:thumbColor="#FFFFFF"/>
-
-        <LinearLayout
-            android:id="@+id/colorContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp"/>
-    </LinearLayout>
+    <ImageButton android:id="@+id/btnClose"
+        style="@style/ToolButtonAccent" android:src="@drawable/ic_close"
+        app:tint="#FFFFFF"/>
 
 </LinearLayout>
