@@ -33,9 +33,6 @@ class DrawingService : Service() {
             "toolbar_side_right" -> {
                 floatingToolbar?.refreshPosition()
             }
-            "finger_draw", "stylus_only" -> {
-                // DrawingCanvas already reads prefs
-            }
             else -> {
                 floatingToolbar?.refreshUi()
             }
@@ -69,7 +66,7 @@ class DrawingService : Service() {
             createNotificationChannel()
             startForeground(NOTIF_ID, buildNotification())
         } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "startForeground hatası", e)
+            CrashLogger.log(this, "Service", "Failed to start foreground", e)
             stopSelf(); return
         }
 
@@ -86,7 +83,7 @@ class DrawingService : Service() {
             drawingCanvas = DrawingCanvas(this, prefs)
             wm.addView(drawingCanvas, params)
         } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "Canvas eklenemedi", e)
+            CrashLogger.log(this, "Service", "Failed to add canvas", e)
             stopSelf(); return
         }
 
@@ -106,7 +103,7 @@ class DrawingService : Service() {
             )
             wm.addView(floatingToolbar!!.getView(), floatingToolbar!!.params)
         } catch (e: Exception) {
-            CrashLogger.log(this, "Service", "Toolbar eklenemedi", e)
+            CrashLogger.log(this, "Service", "Failed to add toolbar", e)
         }
     }
 
@@ -153,7 +150,7 @@ class DrawingService : Service() {
     }
 
     private fun createNotificationChannel() {
-        val ch = NotificationChannel(CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW).apply {
+        val ch = NotificationChannel(CHANNEL_ID, "Drawing Service", NotificationManager.IMPORTANCE_LOW).apply {
             enableLights(false); enableVibration(false)
         }
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(ch)
@@ -168,10 +165,10 @@ class DrawingService : Service() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_app_pencil)
-            .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_text))
+            .setContentTitle("Drawly Active")
+            .setContentText("Drawing overlay is running")
             .setContentIntent(openPi)
-            .addAction(R.drawable.ic_close, getString(R.string.close), stopPi)
+            .addAction(R.drawable.ic_close, "Stop", stopPi)
             .setOngoing(true).setSilent(true).setColor(Color.WHITE).build()
     }
 }

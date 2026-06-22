@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.*
 import android.widget.*
 import com.google.android.material.slider.Slider
+import androidx.appcompat.view.ContextThemeWrapper
 
 class FloatingToolbar(
     private val context: Context,
@@ -79,34 +80,53 @@ class FloatingToolbar(
         vis(R.id.btnSpotlight, prefs.showSpotlight)
         vis(R.id.btnScreenshot, prefs.showScreenshot)
         vis(R.id.btnPassThrough, prefs.showPassthrough)
-        vis(R.id.btnRuler, true) // Always show for now if requested
+        vis(R.id.btnRuler, prefs.showRuler)
 
-        // Pen tool visibility
         vis(R.id.btnFountain, prefs.showFountain)
         vis(R.id.btnCalligraphy, prefs.showCalligraphy)
         vis(R.id.btnPencil, prefs.showPencil)
         vis(R.id.btnBrush, prefs.showBrush)
         vis(R.id.btnMarker, prefs.showMarker)
 
-        val defaultId = mapOf(
-            "PEN" to R.id.btnPen, "PENCIL" to R.id.btnPencil, "FOUNTAIN" to R.id.btnFountain,
-            "BRUSH" to R.id.btnBrush, "CALLIGRAPHY" to R.id.btnCalligraphy, "MARKER" to R.id.btnMarker,
-            "ERASER" to R.id.btnEraser, "LASER" to R.id.btnLaser
-        )[prefs.defaultTool] ?: R.id.btnPen
-        updateToolHighlight(defaultId)
-        canvas.currentTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
+        val defaultTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
+        canvas.currentTool = defaultTool
         canvas.strokeWidth = prefs.defaultStroke
+        
+        val id = getToolButtonId(defaultTool)
+        if (id != 0) updateToolHighlight(id)
+    }
+
+    private fun getToolButtonId(tool: DrawingTool): Int {
+        return when (tool) {
+            DrawingTool.PEN -> R.id.btnPen
+            DrawingTool.PENCIL -> R.id.btnPencil
+            DrawingTool.FOUNTAIN -> R.id.btnFountain
+            DrawingTool.BRUSH -> R.id.btnBrush
+            DrawingTool.CALLIGRAPHY -> R.id.btnCalligraphy
+            DrawingTool.MARKER -> R.id.btnMarker
+            DrawingTool.ERASER -> R.id.btnEraser
+            DrawingTool.LINE -> R.id.btnLine
+            DrawingTool.RECTANGLE -> R.id.btnRect
+            DrawingTool.CIRCLE -> R.id.btnCircle
+            DrawingTool.ARROW -> R.id.btnArrow
+            DrawingTool.LASER -> R.id.btnLaser
+            else -> 0
+        }
     }
 
     private fun setupDrag() {
-        root.findViewById<View>(R.id.dragHandle)?.setOnTouchListener { _, ev ->
+        root.findViewById<View>(R.id.dragHandle)?.setOnTouchListener { v, ev ->
             when (ev.actionMasked) {
-                MotionEvent.ACTION_DOWN -> { dragStartX = ev.rawX; dragStartY = ev.rawY; winStartX = params.x; winStartY = params.y }
+                MotionEvent.ACTION_DOWN -> { 
+                    dragStartX = ev.rawX; dragStartY = ev.rawY
+                    winStartX = params.x; winStartY = params.y 
+                }
                 MotionEvent.ACTION_MOVE -> {
                     params.x = (winStartX + (ev.rawX - dragStartX)).toInt()
                     params.y = (winStartY + (ev.rawY - dragStartY)).toInt()
                     try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
                 }
+                MotionEvent.ACTION_UP -> { v.performClick() }
             }
             true
         }
@@ -138,13 +158,7 @@ class FloatingToolbar(
 
         toolMap.forEach { (id, tool) ->
             root.findViewById<ImageButton>(id)?.setOnClickListener {
-                canvas.currentTool = tool
-                if (isPassThrough) {
-                    isPassThrough = false
-                    onTogglePassThrough(false)
-                    root.findViewById<ImageButton>(R.id.btnPassThrough)?.clearColorFilter()
-                }
-                updateToolHighlight(id)
+                selectTool(tool, id)
             }
         }
 
@@ -178,30 +192,25 @@ class FloatingToolbar(
         updateRulerButton()
 
         root.findViewById<ImageButton>(R.id.btnToolSelect)?.setOnClickListener { btn ->
-            val popup = PopupMenu(context, btn)
-            DrawingTool.values().forEachIndexed { index, tool ->
-                popup.menu.add(0, index, 0, tool.name.lowercase().replaceFirstChar { it.uppercase() })
+            val themedContext = ContextThemeWrapper(context, R.style.Theme_DrawOnScreen)
+            val popup = PopupMenu(themedContext, btn)
+            val tools = DrawingTool.entries
+            tools.forEachIndexed { index, tool ->
+                popup.menu.add(0, index, 0, tool.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() })
             }
             popup.setOnMenuItemClickListener { item ->
-                val tool = DrawingTool.values()[item.itemId]
-                canvas.currentTool = tool
-                val id = mapOf(
-                    DrawingTool.PEN to R.id.btnPen, DrawingTool.PENCIL to R.id.btnPencil,
-                    DrawingTool.FOUNTAIN to R.id.btnFountain, DrawingTool.BRUSH to R.id.btnBrush,
-                    DrawingTool.CALLIGRAPHY to R.id.btnCalligraphy, DrawingTool.MARKER to R.id.btnMarker,
-                    DrawingTool.ERASER to R.id.btnEraser, DrawingTool.LINE to R.id.btnLine,
-                    DrawingTool.RECTANGLE to R.id.btnRect, DrawingTool.CIRCLE to R.id.btnCircle,
-                    DrawingTool.ARROW to R.id.btnArrow, DrawingTool.LASER to R.id.btnLaser
-                )[tool]
-                id?.let { updateToolHighlight(it) }
+                val tool = tools[item.itemId]
+                val btnId = getToolButtonId(tool)
+                selectTool(tool, if (btnId != 0) btnId else R.id.btnToolSelect)
                 true
             }
             popup.show()
         }
 
         root.findViewById<ImageButton>(R.id.btnStylusAction)?.setOnClickListener { btn ->
-            val popup = PopupMenu(context, btn)
-            val actions = listOf("Silgi (Eraser)", "Lazer (Laser)", "Marker")
+            val themedContext = ContextThemeWrapper(context, R.style.Theme_DrawOnScreen)
+            val popup = PopupMenu(themedContext, btn)
+            val actions = listOf("Eraser", "Laser", "Marker")
             actions.forEachIndexed { index, action -> popup.menu.add(0, index, 0, action) }
             popup.setOnMenuItemClickListener { item ->
                 val action = when (item.itemId) {
@@ -215,6 +224,16 @@ class FloatingToolbar(
             }
             popup.show()
         }
+    }
+
+    private fun selectTool(tool: DrawingTool, btnId: Int) {
+        canvas.currentTool = tool
+        if (isPassThrough) {
+            isPassThrough = false
+            onTogglePassThrough(false)
+            root.findViewById<ImageButton>(R.id.btnPassThrough)?.clearColorFilter()
+        }
+        updateToolHighlight(btnId)
     }
 
     private fun setupColorPalette() {
@@ -245,9 +264,12 @@ class FloatingToolbar(
     }
 
     private fun updateToolHighlight(selectedId: Int) {
-        listOf(R.id.btnPen, R.id.btnPencil, R.id.btnFountain, R.id.btnBrush, R.id.btnCalligraphy,
-            R.id.btnMarker, R.id.btnEraser, R.id.btnLine, R.id.btnRect, R.id.btnCircle, R.id.btnArrow, R.id.btnLaser)
-            .forEach { id -> root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.55f }
+        val toolIds = listOf(R.id.btnPen, R.id.btnPencil, R.id.btnFountain, R.id.btnBrush, R.id.btnCalligraphy,
+            R.id.btnMarker, R.id.btnEraser, R.id.btnLine, R.id.btnRect, R.id.btnCircle, R.id.btnArrow, R.id.btnLaser, R.id.btnToolSelect)
+        
+        toolIds.forEach { id -> 
+            root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.55f 
+        }
     }
 
     private fun toggleSpotlight() {

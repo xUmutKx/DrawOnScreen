@@ -21,11 +21,10 @@ class MainActivity : AppCompatActivity() {
     private val overlayPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        // İzin verildiyse hemen başlat — kullanıcı geri döndüğünde onResume da çalışır
         if (Settings.canDrawOverlays(this)) {
             startDrawingService()
         } else {
-            Snackbar.make(binding.root, "İzin verilmedi. Ayarlardan etkinleştirin.", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Permission not granted. Please enable it in Settings.", Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnStart.setOnClickListener {
             if (DrawingService.isRunning) {
                 stopService(Intent(this, DrawingService::class.java))
-                // Kısa gecikme ile state güncelle — service onDestroy async
                 Handler(Looper.getMainLooper()).postDelayed({ updateButtonState() }, 300)
             } else if (Settings.canDrawOverlays(this)) {
                 startDrawingService()
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateButtonState() {
         val running = DrawingService.isRunning
         binding.btnStart.text = if (running) "Stop Drawing" else "Start Drawing"
-        binding.tvStatus.text = if (running) "● Active" else "● Idle"
+        binding.tvStatus.text = if (running) "● ACTIVE" else "● IDLE"
         binding.btnStart.setIconResource(if (running) R.drawable.ic_close else R.drawable.ic_play)
         binding.btnStart.setTextColor(if (running) 0xFFFFFFFF.toInt() else 0xFF000000.toInt())
         binding.btnStart.backgroundTintList = android.content.res.ColorStateList.valueOf(
@@ -78,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     private fun startDrawingService() {
         try {
             startForegroundService(Intent(this, DrawingService::class.java))
-            // Kısa gecikme: service isRunning=true yapmadan önce buton state güncellenmesi
             Handler(Looper.getMainLooper()).postDelayed({ updateButtonState() }, 200)
             if (prefs.minimizeOnDraw) {
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -86,20 +83,20 @@ class MainActivity : AppCompatActivity() {
                 }, 500)
             }
         } catch (e: Exception) {
-            Snackbar.make(binding.root, "Başlatılamadı: ${e.message}", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Failed to start: ${e.message}", Snackbar.LENGTH_LONG).show()
         }
     }
 
     private fun requestOverlayPermission() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("İzin Gerekli")
-            .setMessage("Drawly'nin \"Diğer uygulamaların üzerinde göster\" iznine ihtiyacı var.\n\nAç → Drawly'yi bul → Açık konuma getir → Geri dön.")
-            .setPositiveButton("Ayarları Aç") { _, _ ->
+            .setTitle("Permission Required")
+            .setMessage("Drawly needs 'Display over other apps' permission to work.\n\nOpen Settings -> Find Drawly -> Turn on the toggle -> Come back.")
+            .setPositiveButton("Open Settings") { _, _ ->
                 overlayPermissionLauncher.launch(
                     Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
                 )
             }
-            .setNegativeButton("İptal", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 }

@@ -2,6 +2,7 @@ package com.drawoverlay.app
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 
 class AppPrefs(context: Context) {
     private val p: SharedPreferences =
@@ -45,7 +46,7 @@ class AppPrefs(context: Context) {
 
     // Defaults
     var defaultTool      get() = p.getString("default_tool", "PEN") ?: "PEN" ; set(v) = p.edit().putString("default_tool", v).apply()
-    var defaultColor     get() = p.getInt("default_color", -1)               ; set(v) = p.edit().putInt("default_color", v).apply()
+    var defaultColor     get() = p.getInt("default_color", Color.RED)        ; set(v) = p.edit().putInt("default_color", v).apply()
     var defaultStroke    get() = p.getFloat("default_stroke", 8f)            ; set(v) = p.edit().putFloat("default_stroke", v).apply()
     var toolbarOpacity   get() = p.getInt("toolbar_opacity", 220)            ; set(v) = p.edit().putInt("toolbar_opacity", v).apply()
     var toolbarSide      get() = p.getBoolean("toolbar_side_right", false)   ; set(v) = p.edit().putBoolean("toolbar_side_right", v).apply()
