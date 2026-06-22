@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background circle for splash/main -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M54,54m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0" />
+    <!-- White Pencil icon centered -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,73 L35,63 L65,33 C67,31 70,31 72,33 L75,36 C77,38 77,41 75,43 L45,73 L35,73 Z M68,37 L71,40 M38,70 L41,73" />
+</vector>

@@ -85,9 +85,8 @@ class FloatingToolbar(
         vis(R.id.btnFountain, prefs.showFountain)
         vis(R.id.btnCalligraphy, prefs.showCalligraphy)
         vis(R.id.btnPencil, prefs.showPencil)
-        
-        root.findViewById<View>(R.id.btnBrush)?.visibility = View.GONE
-        root.findViewById<View>(R.id.btnMarker)?.visibility = View.GONE
+        vis(R.id.btnBrush, prefs.showBrush)
+        vis(R.id.btnMarker, prefs.showMarker)
 
         val defaultTool = try { DrawingTool.valueOf(prefs.defaultTool) } catch (_: Exception) { DrawingTool.PEN }
         canvas.currentTool = defaultTool
@@ -243,7 +242,9 @@ class FloatingToolbar(
         val menuParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or 
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START

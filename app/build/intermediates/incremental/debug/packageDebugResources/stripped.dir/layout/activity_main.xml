@@ -15,17 +15,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:src="@drawable/ic_custom_launcher"
-            android:scaleType="fitCenter"
-            android:background="@drawable/bg_toolbar"
-            android:backgroundTint="#1AFFFFFF"
-            android:padding="24dp"/>
+            android:scaleType="fitCenter"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,16 +40,6 @@
             android:textColor="#888888"
             android:textSize="16sp"
             android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="● IDLE"
-            android:textColor="#666666"
-            android:textSize="12sp"
-            android:letterSpacing="0.1"
-            android:layout_marginTop="16dp"/>
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
