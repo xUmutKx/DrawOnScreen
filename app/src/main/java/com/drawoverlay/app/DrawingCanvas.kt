@@ -48,7 +48,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
     // For smoothing (Bézier)
     private var mX = 0f
     private var mY = 0f
-    private val touchTolerance = 2f
+    private val touchTolerance = 1.5f
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -76,8 +76,9 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
             DrawingTool.PENCIL -> {
                 p.style = Paint.Style.STROKE
                 p.strokeWidth = strokeWidth * pressureScale * 0.8f
-                p.alpha = (opacity * 0.7f * pressureScale).toInt().coerceIn(30, 255)
-                p.maskFilter = BlurMaskFilter(1.2f, BlurMaskFilter.Blur.NORMAL)
+                p.alpha = (opacity * 0.8f * pressureScale).toInt().coerceIn(30, 255)
+                // Reduced blur to prevent "dot" appearance
+                p.maskFilter = BlurMaskFilter(0.8f, BlurMaskFilter.Blur.NORMAL)
             }
             DrawingTool.FOUNTAIN -> {
                 val angle = atan2(dy.toDouble(), dx.toDouble())
@@ -132,7 +133,7 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
             }
             DrawingTool.ERASER -> {
                 p.style = Paint.Style.STROKE
-                p.strokeWidth = strokeWidth * 5f
+                p.strokeWidth = strokeWidth * 6f // Larger eraser
                 p.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
             }
             DrawingTool.LASER -> {
@@ -152,12 +153,17 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val toolType = event.getToolType(0)
-        if (prefs.stylusOnly && toolType != MotionEvent.TOOL_TYPE_STYLUS) return false
-        if (!prefs.fingerDraw && toolType == MotionEvent.TOOL_TYPE_FINGER) return false
+        
+        // ROBUST STYLUS DETECTION (S-Pen can be STYLUS or ERASER)
+        val isStylus = toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER
+        val isFinger = toolType == MotionEvent.TOOL_TYPE_FINGER
+
+        if (prefs.stylusOnly && !isStylus) return false
+        if (!prefs.fingerDraw && isFinger) return false
 
         val x = event.x
         val y = event.y
-        val pressure = if (toolType == MotionEvent.TOOL_TYPE_STYLUS && prefs.pressureSensitive) event.getPressure(0).coerceIn(0.1f, 1.0f) else 1f
+        val pressure = if (isStylus && prefs.pressureSensitive) event.getPressure(0).coerceIn(0.1f, 1.0f) else 1f
         
         val dx = x - lastX
         val dy = y - lastY
@@ -212,7 +218,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                             } else {
                                 bitmapCanvas?.drawPath(dp.path, dp.paint)
                                 dp.path.reset()
-                                // START NEXT SEGMENT WHERE LAST ONE ENDED
                                 if (prefs.smoothing) dp.path.moveTo(endX, endY) else dp.path.moveTo(x, y)
                             }
                             
@@ -236,7 +241,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                     invalidate()
                 } else {
                     currentPath?.let { dp ->
-                        // Finalize the last bit of the path
                         dp.path.lineTo(x, y)
                         bitmapCanvas?.drawPath(dp.path, dp.paint)
                         
@@ -253,7 +257,6 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
                 }
                 performClick()
             }
-            // ... (rest is the same)
             MotionEvent.ACTION_BUTTON_PRESS -> {
                 if (event.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY != 0 && !stylusButtonHeld) {
                     stylusButtonHeld = true
