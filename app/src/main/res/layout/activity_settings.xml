@@ -64,6 +64,22 @@
             <TextView style="@style/SectionHeader" android:text="Çizim"/>
 
             <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_brush"/>
+                <TextView style="@style/PrefTitle" android:text="Mürekkep Yayılması (Bleeding)"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchInkBleeding"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
+                <ImageView style="@style/PrefIcon" android:src="@drawable/ic_line"/>
+                <TextView style="@style/PrefTitle" android:text="Cetvel Göster"/>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchShowRuler"
+                    style="@style/PrefSwitch"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/PrefRow">
                 <ImageView style="@style/PrefIcon" android:src="@drawable/ic_pen"/>
                 <TextView style="@style/PrefTitle" android:text="Parmakla çizim"/>
                 <com.google.android.material.materialswitch.MaterialSwitch

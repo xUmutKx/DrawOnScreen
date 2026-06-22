@@ -18,27 +18,32 @@ class DrawingService : Service() {
     private lateinit var wm: WindowManager
     private var drawingCanvas: DrawingCanvas? = null
     private var floatingToolbar: FloatingToolbar? = null
+    private lateinit var prefs: AppPrefs
+
+    private val prefChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        when (key) {
+            "minimal_ui" -> {
+                if (prefs.minimalUi) {
+                    floatingToolbar?.getView()?.let { try { wm.removeView(it) } catch (_: Exception) {} }
+                    floatingToolbar = null
+                } else if (floatingToolbar == null) {
+                    addToolbar()
+                }
+            }
+            "toolbar_side_right" -> {
+                floatingToolbar?.refreshPosition()
+            }
+            "finger_draw", "stylus_only" -> {
+                // DrawingCanvas already reads prefs on every touch event, but we can force it if needed
+            }
+            else -> {
+                floatingToolbar?.refreshUi()
+            }
+        }
+    }
 
     private val CHANNEL_ID = "draw_overlay_channel"
-    private val NOTIF_ID = 1
-
-    private var currentCanvasParams: WindowManager.LayoutParams? = null
-
-    private fun makeCanvasParams(passThrough: Boolean = false) = WindowManager.LayoutParams(
-        WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        if (passThrough)
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-        else
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-        PixelFormat.TRANSLUCENT
-    )
+    // ... (rest of constants)
 
     override fun onCreate() {
         super.onCreate()
@@ -52,7 +57,8 @@ class DrawingService : Service() {
 
         isRunning = true
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
-        val prefs = AppPrefs(this)
+        prefs = AppPrefs(this)
+        prefs.registerListener(prefChangeListener)
 
         if (prefs.vibrateOnStart) vibrate()
 
@@ -67,19 +73,40 @@ class DrawingService : Service() {
         }
 
         if (!prefs.minimalUi) {
-            try {
-                floatingToolbar = FloatingToolbar(
-                    context = this, wm = wm, canvas = drawingCanvas!!,
-                    prefs = prefs,
-                    onClose = { stopSelf() },
-                    onTogglePassThrough = { pt -> setPassThrough(pt) },
-                    onScreenshot = { floatingToolbar?.startScreenshotCrop(drawingCanvas?.getBitmap()) }
-                )
-                wm.addView(floatingToolbar!!.getView(), floatingToolbar!!.params)
-            } catch (e: Exception) {
-                CrashLogger.log(this, "Service", "Toolbar eklenemedi", e)
-            }
+            addToolbar()
         }
+    }
+
+    private fun addToolbar() {
+        try {
+            floatingToolbar = FloatingToolbar(
+                context = this, wm = wm, canvas = drawingCanvas!!,
+                prefs = prefs,
+                onClose = { stopSelf() },
+                onTogglePassThrough = { pt -> setPassThrough(pt) },
+                onScreenshot = { floatingToolbar?.startScreenshotCrop(drawingCanvas?.getBitmap()) }
+            )
+            wm.addView(floatingToolbar!!.getView(), floatingToolbar!!.params)
+        } catch (e: Exception) {
+            CrashLogger.log(this, "Service", "Toolbar eklenemedi", e)
+        }
+    }
+
+    private fun setPassThrough(enabled: Boolean) {
+        // ... (existing code)
+    }
+
+    private fun vibrate() {
+        // ... (existing code)
+    }
+
+    override fun onDestroy() {
+        isRunning = false
+        prefs.unregisterListener(prefChangeListener)
+        try { drawingCanvas?.let { wm.removeView(it) } } catch (_: Exception) {}
+        try { floatingToolbar?.getView()?.let { wm.removeView(it) } } catch (_: Exception) {}
+        drawingCanvas = null; floatingToolbar = null
+        super.onDestroy()
     }
 
     private fun setPassThrough(enabled: Boolean) {

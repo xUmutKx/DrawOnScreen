@@ -20,6 +20,15 @@ class AppPrefs(context: Context) {
     var autoPassthrough  get() = p.getBoolean("auto_passthrough", false)  ; set(v) = p.edit().putBoolean("auto_passthrough", v).apply()
     var smoothing        get() = p.getBoolean("smoothing", true)          ; set(v) = p.edit().putBoolean("smoothing", v).apply()
     var pressureSensitive get() = p.getBoolean("pressure_sensitive", true); set(v) = p.edit().putBoolean("pressure_sensitive", v).apply()
+    var inkBleeding      get() = p.getBoolean("ink_bleeding", false)      ; set(v) = p.edit().putBoolean("ink_bleeding", v).apply()
+    var stabilization    get() = p.getInt("stabilization", 5)             ; set(v) = p.edit().putInt("stabilization", v).apply()
+    var textureIntensity get() = p.getFloat("texture_intensity", 0.5f)    ; set(v) = p.edit().putFloat("texture_intensity", v).apply()
+
+    // Smart Tools
+    var showRuler        get() = p.getBoolean("show_ruler_tool", true)    ; set(v) = p.edit().putBoolean("show_ruler_tool", v).apply()
+    var rulerRotation    get() = p.getFloat("ruler_rot", 0f)              ; set(v) = p.edit().putFloat("ruler_rot", v).apply()
+    var rulerX           get() = p.getFloat("ruler_x", 100f)              ; set(v) = p.edit().putFloat("ruler_x", v).apply()
+    var rulerY           get() = p.getFloat("ruler_y", 400f)              ; set(v) = p.edit().putFloat("ruler_y", v).apply()
 
     // Toolbar visibility
     var showUndo         get() = p.getBoolean("show_undo", true)          ; set(v) = p.edit().putBoolean("show_undo", v).apply()
@@ -55,4 +64,12 @@ class AppPrefs(context: Context) {
     var hwAcceleration    get() = p.getBoolean("hw_acceleration", true)      ; set(v) = p.edit().putBoolean("hw_acceleration", v).apply()
 
     fun resetAll() = p.edit().clear().apply()
+
+    fun registerListener(l: SharedPreferences.OnSharedPreferenceChangeListener) {
+        p.registerOnSharedPreferenceChangeListener(l)
+    }
+
+    fun unregisterListener(l: SharedPreferences.OnSharedPreferenceChangeListener) {
+        p.unregisterOnSharedPreferenceChangeListener(l)
+    }
 }

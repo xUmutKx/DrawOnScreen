@@ -46,6 +46,8 @@ class SettingsActivity : AppCompatActivity() {
         b.switchShowScreenshot.isChecked  = prefs.showScreenshot
         b.switchShowPassthrough.isChecked = prefs.showPassthrough
         b.switchToolbarRight.isChecked    = prefs.toolbarSide
+        b.switchInkBleeding.isChecked     = prefs.inkBleeding
+        b.switchShowRuler.isChecked       = prefs.showRuler
         b.switchShowFountain.isChecked    = prefs.showFountain
         b.switchShowCalligraphy.isChecked = prefs.showCalligraphy
         b.switchShowPencil.isChecked      = prefs.showPencil
@@ -58,37 +60,45 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        b.switchMinimalUi.setOnCheckedChangeListener       { _, v -> prefs.minimalUi = v }
-        b.switchMinimizeOnDraw.setOnCheckedChangeListener  { _, v -> prefs.minimizeOnDraw = v }
-        b.switchKeepScreenOn.setOnCheckedChangeListener    { _, v ->
-            prefs.keepScreenOn = v
-            if (v) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // Yardımcı fonksiyon: Satıra tıklandığında switch'i tetikle
+        fun setupRow(row: android.view.View, switch: com.google.android.material.materialswitch.MaterialSwitch, prefSetter: (Boolean) -> Unit) {
+            row.setOnClickListener { switch.isChecked = !switch.isChecked }
+            switch.setOnCheckedChangeListener { _, v -> prefSetter(v) }
+        }
+
+        setupRow(b.switchMinimalUi.parent as android.view.View, b.switchMinimalUi) { prefs.minimalUi = it }
+        setupRow(b.switchMinimizeOnDraw.parent as android.view.View, b.switchMinimizeOnDraw) { prefs.minimizeOnDraw = it }
+        setupRow(b.switchKeepScreenOn.parent as android.view.View, b.switchKeepScreenOn) {
+            prefs.keepScreenOn = it
+            if (it) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
-        b.switchVibrate.setOnCheckedChangeListener         { _, v -> prefs.vibrateOnStart = v }
-        b.switchFingerDraw.setOnCheckedChangeListener      { _, v -> prefs.fingerDraw = v }
-        b.switchStylusOnly.setOnCheckedChangeListener      { _, v -> prefs.stylusOnly = v }
-        b.switchAutoPassthrough.setOnCheckedChangeListener { _, v -> prefs.autoPassthrough = v }
-        b.switchSmoothing.setOnCheckedChangeListener       { _, v -> prefs.smoothing = v }
-        b.switchPressure.setOnCheckedChangeListener        { _, v -> prefs.pressureSensitive = v }
-        b.switchShowUndo.setOnCheckedChangeListener        { _, v -> prefs.showUndo = v }
-        b.switchShowRedo.setOnCheckedChangeListener        { _, v -> prefs.showRedo = v }
-        b.switchShowEraser.setOnCheckedChangeListener      { _, v -> prefs.showEraser = v }
-        b.switchShowShapes.setOnCheckedChangeListener      { _, v -> prefs.showShapes = v }
-        b.switchShowLaser.setOnCheckedChangeListener       { _, v -> prefs.showLaser = v }
-        b.switchShowSpotlight.setOnCheckedChangeListener   { _, v -> prefs.showSpotlight = v }
-        b.switchShowScreenshot.setOnCheckedChangeListener  { _, v -> prefs.showScreenshot = v }
-        b.switchShowPassthrough.setOnCheckedChangeListener { _, v -> prefs.showPassthrough = v }
-        b.switchToolbarRight.setOnCheckedChangeListener    { _, v -> prefs.toolbarSide = v }
-        b.switchShowFountain.setOnCheckedChangeListener    { _, v -> prefs.showFountain = v }
-        b.switchShowCalligraphy.setOnCheckedChangeListener { _, v -> prefs.showCalligraphy = v }
-        b.switchShowPencil.setOnCheckedChangeListener      { _, v -> prefs.showPencil = v }
-        b.switchShowBrush.setOnCheckedChangeListener       { _, v -> prefs.showBrush = v }
-        b.switchShowMarker.setOnCheckedChangeListener      { _, v -> prefs.showMarker = v }
-        b.switchHwAcceleration.setOnCheckedChangeListener  { _, v -> prefs.hwAcceleration = v }
-        b.switchDebugOverlay.setOnCheckedChangeListener    { _, v -> prefs.debugOverlay = v }
-        b.switchVerboseLogging.setOnCheckedChangeListener  { _, v -> prefs.verboseLogging = v }
-        b.switchDisableCrashLog.setOnCheckedChangeListener { _, v -> prefs.disableCrashLog = v }
+        setupRow(b.switchVibrate.parent as android.view.View, b.switchVibrate) { prefs.vibrateOnStart = it }
+        setupRow(b.switchFingerDraw.parent as android.view.View, b.switchFingerDraw) { prefs.fingerDraw = it }
+        setupRow(b.switchStylusOnly.parent as android.view.View, b.switchStylusOnly) { prefs.stylusOnly = it }
+        setupRow(b.switchAutoPassthrough.parent as android.view.View, b.switchAutoPassthrough) { prefs.autoPassthrough = it }
+        setupRow(b.switchSmoothing.parent as android.view.View, b.switchSmoothing) { prefs.smoothing = it }
+        setupRow(b.switchPressure.parent as android.view.View, b.switchPressure) { prefs.pressureSensitive = it }
+        setupRow(b.switchShowUndo.parent as android.view.View, b.switchShowUndo) { prefs.showUndo = it }
+        setupRow(b.switchShowRedo.parent as android.view.View, b.switchShowRedo) { prefs.showRedo = it }
+        setupRow(b.switchShowEraser.parent as android.view.View, b.switchShowEraser) { prefs.showEraser = it }
+        setupRow(b.switchShowShapes.parent as android.view.View, b.switchShowShapes) { prefs.showShapes = it }
+        setupRow(b.switchShowLaser.parent as android.view.View, b.switchShowLaser) { prefs.showLaser = it }
+        setupRow(b.switchShowSpotlight.parent as android.view.View, b.switchShowSpotlight) { prefs.showSpotlight = it }
+        setupRow(b.switchShowScreenshot.parent as android.view.View, b.switchShowScreenshot) { prefs.showScreenshot = it }
+        setupRow(b.switchShowPassthrough.parent as android.view.View, b.switchShowPassthrough) { prefs.showPassthrough = it }
+        setupRow(b.switchToolbarRight.parent as android.view.View, b.switchToolbarRight) { prefs.toolbarSide = it }
+        setupRow(b.switchInkBleeding.parent as android.view.View, b.switchInkBleeding) { prefs.inkBleeding = it }
+        setupRow(b.switchShowRuler.parent as android.view.View, b.switchShowRuler) { prefs.showRuler = it }
+        setupRow(b.switchShowFountain.parent as android.view.View, b.switchShowFountain) { prefs.showFountain = it }
+        setupRow(b.switchShowCalligraphy.parent as android.view.View, b.switchShowCalligraphy) { prefs.showCalligraphy = it }
+        setupRow(b.switchShowPencil.parent as android.view.View, b.switchShowPencil) { prefs.showPencil = it }
+        setupRow(b.switchShowBrush.parent as android.view.View, b.switchShowBrush) { prefs.showBrush = it }
+        setupRow(b.switchShowMarker.parent as android.view.View, b.switchShowMarker) { prefs.showMarker = it }
+        setupRow(b.switchHwAcceleration.parent as android.view.View, b.switchHwAcceleration) { prefs.hwAcceleration = it }
+        setupRow(b.switchDebugOverlay.parent as android.view.View, b.switchDebugOverlay) { prefs.debugOverlay = it }
+        setupRow(b.switchVerboseLogging.parent as android.view.View, b.switchVerboseLogging) { prefs.verboseLogging = it }
+        setupRow(b.switchDisableCrashLog.parent as android.view.View, b.switchDisableCrashLog) { prefs.disableCrashLog = it }
 
         b.rowResetAll.setOnClickListener {
             com.google.android.material.dialog.MaterialAlertDialogBuilder(this)

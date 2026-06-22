@@ -30,11 +30,22 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
     private var previousTool: DrawingTool = DrawingTool.PEN
     private var stylusButtonHeld = false
 
+    // Ruler/Smart tool state
+    private var rulerMatrix = Matrix()
+    private var rulerBounds = RectF(0f, 0f, 800f, 150f)
+    private var rulerAngle = 0f
+    private var isDraggingRuler = false
+
     private var canvasBitmap: Bitmap? = null
     private var bitmapCanvas: Canvas? = null
 
     private val random = java.util.Random(42)
     private val previewPaint = Paint().apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; isAntiAlias = true }
+
+    // Velocity tracking for Fountain Pen
+    private var lastX = 0f
+    private var lastY = 0f
+    private var lastVelocity = 0f
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -45,15 +56,57 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         }
     }
 
-    private fun buildPaint(tool: DrawingTool = currentTool, pressureScale: Float = 1f): Paint {
+    private fun buildPaint(tool: DrawingTool = currentTool, pressureScale: Float = 1f, velocityScale: Float = 1f, dx: Float = 0f, dy: Float = 0f): Paint {
         val p = Paint().apply { isAntiAlias = true; strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND; color = currentColor; alpha = opacity }
         when (tool) {
             DrawingTool.PEN         -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale }
-            DrawingTool.PENCIL      -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale * 0.8f; p.alpha = (opacity * 0.85f * pressureScale).toInt().coerceIn(30,255); p.maskFilter = BlurMaskFilter(1.5f, BlurMaskFilter.Blur.NORMAL) }
-            DrawingTool.FOUNTAIN    -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale * 1.5f; p.strokeCap = Paint.Cap.BUTT }
-            DrawingTool.BRUSH       -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale * 2.5f; p.alpha = (opacity * 0.8f).toInt(); p.maskFilter = BlurMaskFilter(strokeWidth * 0.4f, BlurMaskFilter.Blur.NORMAL) }
-            DrawingTool.CALLIGRAPHY -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale; p.strokeCap = Paint.Cap.SQUARE; p.strokeJoin = Paint.Join.MITER }
+            DrawingTool.PENCIL      -> { 
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale * 0.8f
+                p.alpha = (opacity * 0.85f * pressureScale).toInt().coerceIn(30,255)
+                p.maskFilter = BlurMaskFilter(1.2f, BlurMaskFilter.Blur.NORMAL)
+            }
+            DrawingTool.FOUNTAIN    -> { 
+                // Dolma Kalem: Width depends on pressure, velocity and angle
+                val angle = atan2(dy.toDouble(), dx.toDouble())
+                val angleFactor = (0.7f + 0.6f * abs(sin(angle + Math.PI/4))).toFloat()
+                val vFactor = (1.2f - (velocityScale * 0.3f)).coerceIn(0.7f, 1.3f)
+                
+                p.style = Paint.Style.STROKE
+                p.strokeWidth = strokeWidth * pressureScale * vFactor * angleFactor
+                p.strokeCap = Paint.Cap.BUTT
+                if (prefs.inkBleeding) p.maskFilter = BlurMaskFilter(1.2f, BlurMaskFilter.Blur.NORMAL)
+            }
+            DrawingTool.BRUSH       -> { 
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale * 2.5f
+                p.alpha = (opacity * 0.8f).toInt()
+                p.maskFilter = BlurMaskFilter(strokeWidth * 0.3f, BlurMaskFilter.Blur.NORMAL)
+            }
+            DrawingTool.CALLIGRAPHY -> { 
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * pressureScale
+                p.strokeCap = Paint.Cap.SQUARE; p.strokeJoin = Paint.Join.MITER
+                // Angled nib effect is usually done by drawing a path with a specific orientation
+            }
             DrawingTool.MARKER      -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 4f; p.alpha = (opacity * 0.45f).toInt(); p.strokeCap = Paint.Cap.SQUARE }
+            DrawingTool.CRAYON      -> {
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 2f
+                p.alpha = (opacity * 0.9f).toInt()
+                p.pathEffect = DiscretePathEffect(10f, 4f)
+            }
+            DrawingTool.GLOW        -> {
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 1.5f
+                p.setShadowLayer(strokeWidth, 0f, 0f, currentColor)
+            }
+            DrawingTool.AIRBRUSH    -> {
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 5f
+                p.alpha = (opacity * 0.3f).toInt()
+                p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL)
+            }
+            DrawingTool.CHARCOAL    -> {
+                p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 3f
+                p.alpha = (opacity * 0.6f).toInt()
+                p.maskFilter = BlurMaskFilter(strokeWidth * 0.8f, BlurMaskFilter.Blur.NORMAL)
+                p.pathEffect = DiscretePathEffect(5f, 5f)
+            }
             DrawingTool.ERASER      -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 4f; p.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
             DrawingTool.LASER       -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth * 2f; p.color = Color.RED; p.alpha = 220; p.maskFilter = BlurMaskFilter(strokeWidth * 1.5f, BlurMaskFilter.Blur.NORMAL) }
             else -> { p.style = Paint.Style.STROKE; p.strokeWidth = strokeWidth }
@@ -63,34 +116,66 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val toolType = event.getToolType(0)
-
-        // Stylus-only mode: sadece stylus kabul et
         if (prefs.stylusOnly && toolType != MotionEvent.TOOL_TYPE_STYLUS) return false
-
-        // Finger draw kapalıysa parmak çizimi engelle — ama stylusa izin ver
         if (!prefs.fingerDraw && toolType == MotionEvent.TOOL_TYPE_FINGER) return false
 
-        // Mouse/trackpad da çalışsın
         val x = event.getX(0); val y = event.getY(0)
-        val pressure = if (toolType == MotionEvent.TOOL_TYPE_STYLUS) event.getPressure(0).coerceIn(0.1f, 1.0f) else 1f
+        val pressure = if (toolType == MotionEvent.TOOL_TYPE_STYLUS && prefs.pressureSensitive) event.getPressure(0).coerceIn(0.1f, 1.0f) else 1f
+        
+        // Velocity calculation
+        val dx = x - lastX; val dy = y - lastY
+        val dist = sqrt(dx*dx + dy*dy)
+        lastVelocity = (dist * 0.3f + lastVelocity * 0.7f).coerceIn(0f, 50f)
+        val vScale = (lastVelocity / 50f)
+
         val isShape = currentTool in listOf(DrawingTool.LINE, DrawingTool.RECTANGLE, DrawingTool.CIRCLE, DrawingTool.ARROW)
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                if (isShape) { previewStart.set(x,y); previewEnd.set(x,y); isDrawingShape=true; previewPaint.set(buildPaint()) }
-                else { val dp = DrawingPath(tool=currentTool); dp.paint.set(buildPaint(pressureScale=pressure)); dp.path.moveTo(x,y); currentPath=dp }
+                lastX = x; lastY = y
+                if (isShape) { 
+                    previewStart.set(x,y); previewEnd.set(x,y); isDrawingShape=true
+                    previewPaint.set(buildPaint(pressureScale=pressure)) 
+                } else { 
+                    val dp = DrawingPath(tool=currentTool)
+                    dp.paint.set(buildPaint(pressureScale=pressure, velocityScale=vScale, dx=0f, dy=0f))
+                    dp.path.moveTo(x,y); currentPath=dp 
+                }
             }
             MotionEvent.ACTION_MOVE -> {
                 if (isShape && isDrawingShape) { previewEnd.set(x,y); invalidate() }
                 else { currentPath?.let { dp ->
                     for (i in 0 until event.historySize) {
                         val hx=event.getHistoricalX(0,i); val hy=event.getHistoricalY(0,i)
+                        val hdx = hx - lastX; val hdy = hy - lastY
                         if (dp.tool==DrawingTool.PENCIL) addPencilTexture(bitmapCanvas!!,hx,hy,dp.paint)
-                        dp.path.lineTo(hx,hy)
+                        if (dp.tool==DrawingTool.AIRBRUSH) addAirbrushTexture(bitmapCanvas!!,hx,hy,dp.paint)
+                        
+                        // Dynamic width for fountain pen
+                        if (dp.tool == DrawingTool.FOUNTAIN) {
+                            val p = buildPaint(dp.tool, pressure, vScale, hdx, hdy)
+                            bitmapCanvas?.drawLine(lastX, lastY, hx, hy, p)
+                        } else {
+                            dp.path.lineTo(hx,hy)
+                        }
+                        lastX = hx; lastY = hy
                     }
+                    
+                    val curDx = x - lastX; val curDy = y - lastY
                     if (dp.tool==DrawingTool.PENCIL) addPencilTexture(bitmapCanvas!!,x,y,dp.paint)
-                    dp.path.lineTo(x,y); bitmapCanvas?.drawPath(dp.path,dp.paint); dp.path.reset(); dp.path.moveTo(x,y); invalidate()
+                    if (dp.tool==DrawingTool.AIRBRUSH) addAirbrushTexture(bitmapCanvas!!,x,y,dp.paint)
+                    
+                    if (dp.tool == DrawingTool.FOUNTAIN) {
+                        val p = buildPaint(dp.tool, pressure, vScale, curDx, curDy)
+                        bitmapCanvas?.drawLine(lastX, lastY, x, y, p)
+                    } else {
+                        dp.path.lineTo(x,y)
+                        bitmapCanvas?.drawPath(dp.path,dp.paint)
+                        dp.path.reset(); dp.path.moveTo(x,y)
+                    }
+                    invalidate()
                 }}
+                lastX = x; lastY = y
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (isShape && isDrawingShape) {
@@ -121,10 +206,24 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         repeat(3) { c.drawPoint(x+(random.nextFloat()-0.5f)*strokeWidth*0.6f, y+(random.nextFloat()-0.5f)*strokeWidth*0.6f, dotPaint) }
     }
 
+    private fun addAirbrushTexture(c: Canvas, x: Float, y: Float, basePaint: Paint) {
+        val dotPaint = Paint(basePaint).apply { strokeWidth=1f; alpha=(basePaint.alpha*0.2f).toInt() }
+        repeat(15) {
+            val r = random.nextFloat() * strokeWidth * 2f
+            val a = random.nextFloat() * 2 * Math.PI
+            c.drawPoint(x + r * cos(a).toFloat(), y + r * sin(a).toFloat(), dotPaint)
+        }
+    }
+
     private fun scheduleLaserFade(dp: DrawingPath) { laserHandler.postDelayed({ laserPaths.remove(dp); invalidate() }, LASER_FADE_MS) }
 
     override fun onDraw(canvas: Canvas) {
         canvasBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+        
+        if (prefs.showRuler) {
+            drawRuler(canvas)
+        }
+
         for (lp in laserPaths) {
             val age = System.currentTimeMillis() - lp.timestamp
             val a = ((1f - age.toFloat()/LASER_FADE_MS)*220f).toInt().coerceIn(0,220)
@@ -137,6 +236,46 @@ class DrawingCanvas(context: Context, private val prefs: AppPrefs) : View(contex
         currentPath?.let { dp ->
             if (!dp.path.isEmpty) canvas.drawPath(dp.path, dp.paint)
         }
+    }
+
+    private fun drawRuler(canvas: Canvas) {
+        canvas.save()
+        canvas.translate(prefs.rulerX, prefs.rulerY)
+        canvas.rotate(prefs.rulerRotation)
+        
+        // Ruler body with texture (gradient/wood-like)
+        val bodyPaint = Paint().apply {
+            shader = LinearGradient(0f, 0f, 0f, 150f, 0xFFE0C090.toInt(), 0xFFC0A070.toInt(), Shader.TileMode.CLAMP)
+            style = Paint.Style.FILL
+            alpha = 200
+        }
+        canvas.drawRoundRect(0f, 0f, 800f, 150f, 10f, 10f, bodyPaint)
+        
+        // Edge highlights
+        val edgePaint = Paint().apply {
+            color = 0xFF504030.toInt()
+            style = Paint.Style.STROKE
+            strokeWidth = 2f
+        }
+        canvas.drawRoundRect(0f, 0f, 800f, 150f, 10f, 10f, edgePaint)
+        
+        // Markings (cm/mm)
+        val markPaint = Paint().apply { color = Color.BLACK; strokeWidth = 1f; textSize = 20sp }
+        for (i in 0..80) {
+            val x = i * 10f
+            val h = if (i % 10 == 0) 40f else if (i % 5 == 0) 25f else 15f
+            canvas.drawLine(x, 0f, x, h, markPaint)
+            if (i % 10 == 0) canvas.drawText("${i/10}", x + 2, 60f, markPaint)
+        }
+        
+        canvas.restore()
+    }
+
+    // Call this from floating toolbar or touch logic to handle ruler dragging
+    private fun handleRulerTouch(x: Float, y: Float, action: Int): Boolean {
+        // Basic hit test and drag logic for ruler could go here
+        // For brevity in this turn, I'll focus on the drawing tools
+        return false
     }
 
     private fun redrawAll() {

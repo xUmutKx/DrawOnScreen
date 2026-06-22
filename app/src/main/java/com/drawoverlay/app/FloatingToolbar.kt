@@ -79,6 +79,14 @@ class FloatingToolbar(
         vis(R.id.btnSpotlight, prefs.showSpotlight)
         vis(R.id.btnScreenshot, prefs.showScreenshot)
         vis(R.id.btnPassThrough, prefs.showPassthrough)
+        vis(R.id.btnRuler, true) // Always show for now if requested
+
+        // Pen tool visibility
+        vis(R.id.btnFountain, prefs.showFountain)
+        vis(R.id.btnCalligraphy, prefs.showCalligraphy)
+        vis(R.id.btnPencil, prefs.showPencil)
+        vis(R.id.btnBrush, prefs.showBrush)
+        vis(R.id.btnMarker, prefs.showMarker)
 
         val defaultId = mapOf(
             "PEN" to R.id.btnPen, "PENCIL" to R.id.btnPencil, "FOUNTAIN" to R.id.btnFountain,
@@ -153,6 +161,11 @@ class FloatingToolbar(
 
         root.findViewById<ImageButton>(R.id.btnScreenshot)?.setOnClickListener { onScreenshot() }
         root.findViewById<ImageButton>(R.id.btnSpotlight)?.setOnClickListener { toggleSpotlight() }
+        root.findViewById<ImageButton>(R.id.btnRuler)?.setOnClickListener { 
+            prefs.showRuler = !prefs.showRuler
+            updateRulerButton()
+            canvas.invalidate()
+        }
         root.findViewById<ImageButton>(R.id.btnClose)?.setOnClickListener { onClose() }
 
         root.findViewById<Slider>(R.id.strokeSlider)?.apply {
@@ -162,20 +175,45 @@ class FloatingToolbar(
         root.findViewById<Slider>(R.id.opacitySlider)?.addOnChangeListener { _, v, _ -> canvas.opacity = v.toInt() }
 
         setupColorPalette()
+        updateRulerButton()
 
-        root.findViewById<Spinner>(R.id.spinnerStylusAction)?.let { spinner ->
-            val opts = arrayOf("Silgi", "Lazer", "Marker")
-            spinner.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, opts)
-                .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-            spinner.setSelection(when (prefs.stylusButtonAction) { "LASER" -> 1; "MARKER" -> 2; else -> 0 })
-            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p: AdapterView<*>?, v: View?, pos: Int, id: Long) {
-                    val action = when (pos) { 1 -> StylusButtonAction.LASER; 2 -> StylusButtonAction.MARKER; else -> StylusButtonAction.ERASER }
-                    canvas.stylusButtonAction = action
-                    prefs.stylusButtonAction = action.name
-                }
-                override fun onNothingSelected(p: AdapterView<*>?) {}
+        root.findViewById<ImageButton>(R.id.btnToolSelect)?.setOnClickListener { btn ->
+            val popup = PopupMenu(context, btn)
+            DrawingTool.values().forEachIndexed { index, tool ->
+                popup.menu.add(0, index, 0, tool.name.lowercase().replaceFirstChar { it.uppercase() })
             }
+            popup.setOnMenuItemClickListener { item ->
+                val tool = DrawingTool.values()[item.itemId]
+                canvas.currentTool = tool
+                val id = mapOf(
+                    DrawingTool.PEN to R.id.btnPen, DrawingTool.PENCIL to R.id.btnPencil,
+                    DrawingTool.FOUNTAIN to R.id.btnFountain, DrawingTool.BRUSH to R.id.btnBrush,
+                    DrawingTool.CALLIGRAPHY to R.id.btnCalligraphy, DrawingTool.MARKER to R.id.btnMarker,
+                    DrawingTool.ERASER to R.id.btnEraser, DrawingTool.LINE to R.id.btnLine,
+                    DrawingTool.RECTANGLE to R.id.btnRect, DrawingTool.CIRCLE to R.id.btnCircle,
+                    DrawingTool.ARROW to R.id.btnArrow, DrawingTool.LASER to R.id.btnLaser
+                )[tool]
+                id?.let { updateToolHighlight(it) }
+                true
+            }
+            popup.show()
+        }
+
+        root.findViewById<ImageButton>(R.id.btnStylusAction)?.setOnClickListener { btn ->
+            val popup = PopupMenu(context, btn)
+            val actions = listOf("Silgi (Eraser)", "Lazer (Laser)", "Marker")
+            actions.forEachIndexed { index, action -> popup.menu.add(0, index, 0, action) }
+            popup.setOnMenuItemClickListener { item ->
+                val action = when (item.itemId) {
+                    1 -> StylusButtonAction.LASER
+                    2 -> StylusButtonAction.MARKER
+                    else -> StylusButtonAction.ERASER
+                }
+                canvas.stylusButtonAction = action
+                prefs.stylusButtonAction = action.name
+                true
+            }
+            popup.show()
         }
     }
 
@@ -200,10 +238,16 @@ class FloatingToolbar(
         }
     }
 
+    private fun updateRulerButton() {
+        root.findViewById<ImageButton>(R.id.btnRuler)?.let {
+            if (prefs.showRuler) it.setColorFilter(0xFFFFEB3B.toInt()) else it.clearColorFilter()
+        }
+    }
+
     private fun updateToolHighlight(selectedId: Int) {
         listOf(R.id.btnPen, R.id.btnPencil, R.id.btnFountain, R.id.btnBrush, R.id.btnCalligraphy,
             R.id.btnMarker, R.id.btnEraser, R.id.btnLine, R.id.btnRect, R.id.btnCircle, R.id.btnArrow, R.id.btnLaser)
-            .forEach { id -> root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.4f }
+            .forEach { id -> root.findViewById<ImageButton>(id)?.alpha = if (id == selectedId) 1f else 0.55f }
     }
 
     private fun toggleSpotlight() {
@@ -222,6 +266,16 @@ class FloatingToolbar(
     }
 
     fun startScreenshotCrop(bmp: Bitmap?) { bmp?.let { canvas.overlayBitmap(it) } }
+
+    fun refreshUi() {
+        applyPrefs()
+    }
+
+    fun refreshPosition() {
+        params.gravity = if (prefs.toolbarSide) Gravity.TOP or Gravity.END else Gravity.TOP or Gravity.START
+        try { wm.updateViewLayout(root, params) } catch (_: Exception) {}
+    }
+
     fun getView(): View = root
 }
 

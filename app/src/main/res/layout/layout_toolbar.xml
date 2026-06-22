@@ -41,6 +41,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Tool Selection -->
+        <ImageButton
+            android:id="@+id/btnToolSelect"
+            style="@style/ToolButton"
+            android:src="@drawable/ic_expand"
+            android:contentDescription="Select Tool"/>
+
+        <View android:layout_width="36dp" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="4dp"/>
+
         <!-- === PEN TYPES === -->
         <ImageButton android:id="@+id/btnPen"
             style="@style/ToolButton" android:src="@drawable/ic_pen"
@@ -97,6 +107,9 @@
         <ImageButton android:id="@+id/btnSpotlight"
             style="@style/ToolButton" android:src="@drawable/ic_spotlight"
             android:contentDescription="Spotlight"/>
+        <ImageButton android:id="@+id/btnRuler"
+            style="@style/ToolButton" android:src="@drawable/ic_line"
+            android:contentDescription="Ruler"/>
 
         <View android:layout_width="36dp" android:layout_height="1dp"
             android:background="@color/divider" android:layout_marginVertical="4dp"/>
@@ -146,19 +159,11 @@
             android:background="@color/divider" android:layout_marginVertical="4dp"/>
 
         <!-- Stylus button action setting -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stylus btn:"
-            android:textColor="#99FFFFFF"
-            android:textSize="9sp"
-            android:layout_gravity="center_horizontal"/>
-        <Spinner
-            android:id="@+id/spinnerStylusAction"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="9sp"/>
+        <ImageButton
+            android:id="@+id/btnStylusAction"
+            style="@style/ToolButton"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="Stylus action"/>
 
         <View android:layout_width="36dp" android:layout_height="1dp"
             android:background="@color/divider" android:layout_marginVertical="4dp"/>
