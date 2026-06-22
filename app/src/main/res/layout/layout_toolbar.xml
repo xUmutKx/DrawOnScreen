@@ -30,7 +30,7 @@
             android:layout_height="28dp"
             android:src="@drawable/ic_collapse"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="@color/icon_tint"
+            app:tint="@color/icon_tint"
             android:contentDescription="Collapse"/>
     </LinearLayout>
 
