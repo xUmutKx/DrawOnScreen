@@ -3250,6 +3250,7 @@ id btnClear
 id btnClearMenu
 id btnClose
 id btnEraser
+id btnPen
 id btnSettings
 id btnStart
 id btnToolSelect
@@ -3277,6 +3278,7 @@ id clip_vertical
 id clockwise
 id closest
 id collapseActionView
+id colorContainer
 id colorContainerPicker
 id colorPreview
 id compress
@@ -3407,6 +3409,7 @@ id listMode
 id list_item
 id logoBlock
 id m3_side_sheet
+id mainBar
 id marquee
 id masked
 id match_constraint
@@ -3563,6 +3566,7 @@ id shortcut
 id showCustom
 id showHome
 id showTitle
+id sidePanel
 id sin
 id skipCollapsed
 id skipped
@@ -3592,6 +3596,7 @@ id staticLayout
 id staticPostLayout
 id stop
 id stretch
+id strokeSlider
 id strokeSliderPicker
 id submenuarrow
 id submit_area

@@ -60,10 +60,12 @@ id btnClear
 id btnClearMenu
 id btnClose
 id btnEraser
+id btnPen
 id btnSettings
 id btnStart
 id btnToolSelect
 id btnUndo
+id colorContainer
 id colorContainerPicker
 id colorPreview
 id dragHandle
@@ -73,8 +75,11 @@ id iconGreen
 id iconRed
 id ivIcon
 id logoBlock
+id mainBar
 id pickerContainer
 id rowResetAll
+id sidePanel
+id strokeSlider
 id strokeSliderPicker
 id switchControl
 id switchFingerDraw

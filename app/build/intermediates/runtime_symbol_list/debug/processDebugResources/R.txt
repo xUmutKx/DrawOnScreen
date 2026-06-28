@@ -3249,6 +3249,7 @@ int id btnClear 0x7f080066
 int id btnClearMenu 0x7f080239
 int id btnClose 0x7f080067
 int id btnEraser 0x7f080069
+int id btnPen 0x7f08006f
 int id btnSettings 0x7f080075
 int id btnStart 0x7f080077
 int id btnToolSelect 0x7f080079
@@ -3276,6 +3277,7 @@ int id clip_vertical 0x7f08008e
 int id clockwise 0x7f08008f
 int id closest 0x7f080090
 int id collapseActionView 0x7f080091
+int id colorContainer 0x7f080092
 int id colorContainerPicker 0x7f080241
 int id colorPreview 0x7f08023b
 int id compress 0x7f080093
@@ -3406,6 +3408,7 @@ int id listMode 0x7f08010b
 int id list_item 0x7f08010c
 int id logoBlock 0x7f08010d
 int id m3_side_sheet 0x7f08010e
+int id mainBar 0x7f080244
 int id marquee 0x7f08010f
 int id masked 0x7f080110
 int id match_constraint 0x7f080111
@@ -3562,6 +3565,7 @@ int id shortcut 0x7f0801a8
 int id showCustom 0x7f0801a9
 int id showHome 0x7f0801aa
 int id showTitle 0x7f0801ab
+int id sidePanel 0x7f080245
 int id sin 0x7f0801ac
 int id skipCollapsed 0x7f0801ad
 int id skipped 0x7f0801ae
@@ -3591,6 +3595,7 @@ int id staticLayout 0x7f0801c5
 int id staticPostLayout 0x7f0801c6
 int id stop 0x7f0801c7
 int id stretch 0x7f0801c8
+int id strokeSlider 0x7f0801c9
 int id strokeSliderPicker 0x7f080243
 int id submenuarrow 0x7f0801ca
 int id submit_area 0x7f0801cb
